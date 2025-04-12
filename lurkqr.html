@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lurk - Penjana QR Code</title>
+  <title>Lurk Penjana QR Code</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,7 +24,7 @@
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
       text-align: center;
-      width: 90%;
+width: 90%;
       max-width: 500px;
     }
 
@@ -43,7 +43,7 @@
     }
 
     button {
-padding: 10px 25px;
+      padding: 10px 25px;
       font-size: 16px;
       background-color: #3498db;
       color: white;
@@ -83,14 +83,13 @@ padding: 10px 25px;
     <button onclick="generateQRCode()">Jana QR</button>
     <div id="qrcode"></div>
   </div>
-
-  <!-- Sertakan pustaka QR Code Styling -->
-  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.0.0/qr-code-styling.min.js"></script>
+<!-- Sertakan pustaka qrcode.js -->
+  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   <script>
     function generateQRCode() {
       var text = document.getElementById("text").value;
       var logoInput = document.getElementById("logo");
-var shape = document.getElementById("shape").value;
+      var shape = document.getElementById("shape").value;
       var qrcodeContainer = document.getElementById("qrcode");
 
       // Kosongkan QR sebelumnya
@@ -100,31 +99,29 @@ var shape = document.getElementById("shape").value;
         var logo = logoInput.files[0];
         var logoUrl = logo ? URL.createObjectURL(logo) : null;
 
-        const qrCode = new QRCodeStyling({
+        // Tetapkan konfigurasi QR Code
+        var qrOptions = {
+          text: text,
           width: 300,
           height: 300,
-          data: text,
-          image: logoUrl,
-          imageWidth: 50,
-          imageHeight: 50,
-          dotsOptions: {
-            color: "#3498db",
-            type: shape,
-          },
-          cornersSquareOptions: {
-            type: "extra-rounded",
-            color: "#2980b9",
-          },
-          cornersDotOptions: {
-            type: "square",
-            color: "#ffffff",
-          },
-          backgroundOptions: {
-            color: "#ecf0f1",
-          },
-        });
+          colorDark: "#3498db",
+          colorLight: "#ecf0f1",
+          correctLevel: QRCode.CorrectLevel.H,
+        };
 
-        qrCode.append(qrcodeContainer);
+        // Jika logo disediakan, tambahkan ke QR Code
+        if (logoUrl) {
+          qrOptions.image = logoUrl;
+          qrOptions.imageSize = 0.2; // Saiz logo dalam QR Code
+        }
+
+        // Hapus QR Code sebelumnya jika ada
+        if (qrcodeContainer.firstChild) {
+          qrcodeContainer.removeChild(qrcodeContainer.firstChild);
+        }
+
+        // Jana QR Code baru
+new QRCode(qrcodeContainer, qrOptions);
       }
     }
   </script>
