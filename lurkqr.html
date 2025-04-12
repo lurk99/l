@@ -33,7 +33,7 @@
       color: #2c3e50;
     }
 
-    input {
+    input[type="text"], input[type="file"], select {
       padding: 12px;
       width: 80%;
       font-size: 16px;
@@ -43,8 +43,8 @@
     }
 
     button {
-      padding: 10px 25px;
-font-size: 16px;
+padding: 10px 25px;
+      font-size: 16px;
       background-color: #3498db;
       color: white;
       border: none;
@@ -72,6 +72,14 @@ font-size: 16px;
     <h1>✨ Penjana QR Code Korporat ✨</h1>
     <input type="text" id="text" placeholder="Masukkan teks atau URL">
     <br>
+    <input type="file" id="logo" accept="image/*">
+    <br>
+    <select id="shape">
+      <option value="square">Bentuk: Square</option>
+      <option value="rounded">Bentuk: Rounded</option>
+      <option value="dot">Bentuk: Dot</option>
+    </select>
+    <br>
     <button onclick="generateQRCode()">Jana QR</button>
     <div id="qrcode"></div>
   </div>
@@ -81,22 +89,27 @@ font-size: 16px;
   <script>
     function generateQRCode() {
       var text = document.getElementById("text").value;
+      var logoInput = document.getElementById("logo");
+var shape = document.getElementById("shape").value;
       var qrcodeContainer = document.getElementById("qrcode");
 
       // Kosongkan QR sebelumnya
       qrcodeContainer.innerHTML = "";
 
       if (text.trim() !== "") {
+        var logo = logoInput.files[0];
+        var logoUrl = logo ? URL.createObjectURL(logo) : null;
+
         const qrCode = new QRCodeStyling({
           width: 300,
           height: 300,
           data: text,
-          image: "path/to/your/logo.png", // Gantikan dengan laluan logo anda
+          image: logoUrl,
           imageWidth: 50,
-imageHeight: 50,
+          imageHeight: 50,
           dotsOptions: {
             color: "#3498db",
-            type: "rounded",
+            type: shape,
           },
           cornersSquareOptions: {
             type: "extra-rounded",
