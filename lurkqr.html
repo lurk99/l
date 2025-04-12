@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lurk QR Code Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+    #qrcode {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Lurk QR Code Generator</h1>
+  <input type="text" id="text" placeholder="Masukkan teks atau URL">
+  <button onclick="generateQRCode()">Jana QR</button>
+
+  <div id="qrcode"></div>
+
+  <!-- Script CDN untuk QRCode.js -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    function generateQRCode() {
+      var text = document.getElementById("text").value;
+      var qrcodeContainer = document.getElementById("qrcode");
+
+      // Kosongkan QR sebelumnya
+      qrcodeContainer.innerHTML = "";
+      if (text.trim() !== "") {
+        new QRCode(qrcodeContainer, {
+          text: text,
+          width: 200,
+          height: 200
+        });
+      }
+    }
+  </script>
+
+</body>
+</html>
