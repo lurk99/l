@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <title>Lurk QR Code Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penjana QR Code Korporat</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,21 +59,25 @@ font-size: 16px;
 
     #qrcode {
       margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>✨ Lurk QR Code Generator ✨</h1>
+    <h1>✨ Penjana QR Code Korporat ✨</h1>
     <input type="text" id="text" placeholder="Masukkan teks atau URL">
     <br>
     <button onclick="generateQRCode()">Jana QR</button>
     <div id="qrcode"></div>
   </div>
 
-  <!-- Script CDN untuk QRCode.js -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <!-- Sertakan pustaka QR Code Styling -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.0.0/qr-code-styling.min.js"></script>
   <script>
     function generateQRCode() {
       var text = document.getElementById("text").value;
@@ -80,16 +85,36 @@ font-size: 16px;
 
       // Kosongkan QR sebelumnya
       qrcodeContainer.innerHTML = "";
+
       if (text.trim() !== "") {
-        new QRCode(qrcodeContainer, {
-          text: text,
-          width: 200,
-          height: 200
+        const qrCode = new QRCodeStyling({
+          width: 300,
+          height: 300,
+          data: text,
+          image: "path/to/your/logo.png", // Gantikan dengan laluan logo anda
+          imageWidth: 50,
+imageHeight: 50,
+          dotsOptions: {
+            color: "#3498db",
+            type: "rounded",
+          },
+          cornersSquareOptions: {
+            type: "extra-rounded",
+            color: "#2980b9",
+          },
+          cornersDotOptions: {
+            type: "square",
+            color: "#ffffff",
+          },
+          backgroundOptions: {
+            color: "#ecf0f1",
+          },
         });
+
+        qrCode.append(qrcodeContainer);
       }
     }
   </script>
 
 </body>
 </html>
-
