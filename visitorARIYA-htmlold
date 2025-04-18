@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+   <html lang="ms">
+   <head>
+     <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta http-equiv="refresh" content="0;url=https://script.google.com/macros/s/AKfycbxnWT3Yw29MceL_poi0H8AyQFIaodDnsHMvpLCc5ohwldHdlSWTLjl--Jr8X9Y9WPY3eA/exec">
+               <title>Lurk</title>
+   </head>
+   <body>
+       <p>FIND - Sistem Daftar Pelawat</p>
+       <script>
+           window.location.href = "https://script.google.com/macros/s/AKfycbxnWT3Yw29MceL_poi0H8AyQFIaodDnsHMvpLCc5ohwldHdlSWTLjl--Jr8X9Y9WPY3eA/exec";
+       </script>
+   </body>
+   </html>
