@@ -3,32 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Streaming</title>
+  <title>LurkTV</title>
+
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
-      background: #f4f4f4;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1588479125901-c6f9b9847c1b') no-repeat center center fixed;
+      background-size: cover;
       display: flex;
       justify-content: center;
-align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
+      align-items: center;
+      flex-direction: column;
+      color: #fff;
+      text-align: center;
     }
-    video {
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+    .video-container {
+      position: relative;
       width: 90%;
       max-width: 800px;
-      border-radius: 10px;
-      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+box-shadow: 0px 8px 20px rgba(0,0,0,0.6);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #ddd;
     }
   </style>
 </head>
 <body>
 
-  <video autoplay muted loop controls>
-    <source src="https://drive.google.com/uc?export=download&id=1y82dZRH0o2ZOPd2OIFjyooStUZ_e6HkK" type="video/mp4">
-    Browser anda tidak menyokong video tag ini.
-  </video>
+  <h1>Selamat Hari Raya 🎉</h1>
+
+  <div class="video-container">
+    <video controls autoplay muted playsinline>
+      <source src="https://drive.google.com/uc?export=download&id=1y82dZRH0o2ZOPd2OIFjyooStUZ_e6HkK" type="video/mp4">
+      Maaf, browser anda tidak menyokong video ini.
+    </video>
+  </div>
+
+  <div class="footer">
+    Video Raya - Komuniti Ariya
+  </div>
 
 </body>
 </html>
