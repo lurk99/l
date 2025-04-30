@@ -49,13 +49,15 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
 }
 
 .image-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+    width: 220px;
+    height: 160px;
+    object-fit: contain;     /* Tunjuk seluruh imej tanpa crop */
     border-radius: 8px;
+    background-color: white; /* Bagi nampak elok kalau imej tak penuh */
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
 }
 
