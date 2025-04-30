@@ -88,6 +88,32 @@
                 align-items: center;
             }
         }
+
+        .footer {
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  text-shadow: 1px 1px 1.5px rgba(255, 255, 255, 0.6);
+  opacity: 0; /* Mulakan dengan opacity 0 (tak nampak) */
+  animation: fadeIn 5s ease-in-out infinite; /* Ubah jadi infinite untuk berulang tanpa henti */
+}
+
+/* fade-in loop */
+@keyframes fadeIn {
+  0% {
+    opacity: 1; /* stat */
+  }
+  50% {
+    opacity: 0; /* nmpk */
+  }
+  100% {
+    opacity: 1; /* las */
+  }
+}
+
     </style>
 </head>
 <body>
@@ -113,9 +139,12 @@
             </div>
 
         </div>
+            <div class="footer">
+      &copy; <span id="currentYear"></span> Developer: Lurk
     </div>
-<footer>
-  &copy; 2025 Lurk Inc. Semua Hak Terpelihara.
-</footer>
+    </div>
+  <script>
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
