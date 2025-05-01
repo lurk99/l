@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARIYA MAP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #info-box {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 2px solid #4CAF50;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
+<h2>Peta Interaktif ARIYA</h2>
+
+<img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" usemap="#pelan" alt="Peta Taman">
+<map name="pelan">
+  <area shape="rect" coords="635,153,692,207" href="javascript:void(0);" onclick="showInfo('Unit 1<br>Penghuni: Mr Lurk')" alt="Unit 1">
+  <area shape="rect" coords="392,389,427,434" href="javascript:void(0);" onclick="showInfo('Unit 2<br>Status: Kosong')" alt="Unit 2">
+</map>
+
+<div id="info-box">
+  <div id="info-text"></div>
+  <button onclick="hideInfo()">Tutup</button>
+</div>
+
+<script>
+  function showInfo(info) {
+    document.getElementById('info-text').innerHTML = info;
+    document.getElementById('info-box').style.display = 'block';
+  }
+
+  function hideInfo() {
+    document.getElementById('info-box').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
