@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Peta Interaktif ARIYA</title>
+  <title>Lurkv3 Peta Interaktif ARIYA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -24,25 +24,25 @@
 
     .marker {
       position: absolute;
-      width: 10px;
-      height: 10px;
+      width: 8px;       /* Kecilkan marker */
+      height: 8px;
       background-color: red;
       border-radius: 50%;
       cursor: pointer;
-      border: 2px solid white;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+      border: 1px solid white;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     }
 
     #info-box {
       margin: 20px auto;
       max-width: 400px;
       background: #ffffff;
-      border: 2px solid #4CAF50;
+border: 2px solid #4CAF50;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       display: none;
-text-align: left;
+      text-align: left;
     }
 
     #info-box h3 {
@@ -72,7 +72,7 @@ text-align: left;
 </head>
 <body>
 
-  <h2>LurkMap-v2-Peta Interaktif Komuniti ARIYA</h2>
+  <h2>Lurkv3 Peta Interaktif Komuniti ARIYA</h2>
 
   <div class="map-container">
     <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" style="max-width: 100%;" />
@@ -87,12 +87,12 @@ text-align: left;
 
   <div id="info-box">
     <div id="info-text"></div>
-    <button onclick="hideInfo()">Tutup</button>
+<button onclick="hideInfo()">Tutup</button>
   </div>
 
   <script>
     function showInfo(unit, nama, telefon, status, pautan) {
-document.getElementById('info-text').innerHTML = `
+      document.getElementById('info-text').innerHTML = `
         <h3>🏠 unit</h3>
         <p><strong>Nama:</strong>{nama}</p>
         <p><strong>No. Telefon:</strong> telefon</p>
