@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lurk Map ARIYA</title>
+  <title>Lurkv3 Peta Interaktif ARIYA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,65 +17,56 @@
       color: #2c3e50;
     }
 
+    .map-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-.map-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
+    .map-inner {
+      position: relative;
+      width: 100%;
+      padding-top: 66.66%; /* nisbah 3:2 berdasarkan imej */
+    }
 
-.map-inner {
-  position: relative;
-  width: 100%;
-  padding-top: 66.66%; /* nisbah 3:2 imej, ubah ikut imej anda */
-}
+    .map-inner img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
-.map-inner img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+    .marker {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+      border: 1px solid white;
+    }
 
-.marker {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-  border: 1px solid white;
-}
+    .marker.aktif {
+      background-color: green;
+    }
 
-.marker.aktif {
-  background-color: red; /* Untuk status "Aktif" */
-}
+    .marker.tidak-aktif {
+      background-color: gray;
+    }
 
-.marker.tidak-aktif {
-  background-color: gray; /* Untuk selain "Aktif" */
-}
-
-
-#info-box {
-  margin: 20px auto;
-  max-width: 400px;
-  background: #ffffff;
-  border: 2px solid #4CAF50;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  display: none;
-  text-align: left;
-}
-
-
-
-
-
-
-
+    #info-box {
+      margin: 20px auto;
+      max-width: 400px;
+      background: #ffffff;
+      border: 2px solid #4CAF50;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      text-align: left;
+    }
 
     #info-box h3 {
       margin-top: 0;
@@ -133,24 +124,21 @@
 </head>
 <body>
 
-  <h2>Lurkv9.2 Owners ARIYA</h2>
+  <h2>Lurkv9.3 Maklumat Pemilik Rumah Komuniti ARIYA</h2>
 
-
-  <!-- Map container -->
-<div class="map-container">
-  <div class="map-inner">
-    <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Lurk Ariya" />
-    <!-- Marker akan dimasukkan dengan JavaScript -->
+  <div class="map-container">
+    <div class="map-inner">
+      <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" />
+      <!-- Marker akan ditambah melalui JavaScript -->
+    </div>
   </div>
-</div>
+
+  <div id="info-box">
+    <div id="info-text"></div>
+    <button onclick="hideInfo()">Tutup</button>
+  </div>
 
 
-  
-
-<div id="info-box">
-  <div id="info-text"></div>
-  <button onclick="hideInfo()">Tutup</button>
-</div>
 
   
 
@@ -166,50 +154,57 @@
  // mrkr
  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-function showInfo(unit, jalan, nama, telefon, status, pautan) {
-  document.getElementById('info-text').innerHTML = `
-    <h3>🏠 ${unit}, ${jalan}</h3>
-    <p><strong>Nama:</strong> ${nama}</p>
-    <p><strong>No. Telefon:</strong> ${telefon}</p>
-    <p><strong>Status Keahlian:</strong> ${status}</p>
-    <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
-  `;
-  document.getElementById('info-box').style.display = 'block';
-}
 
-  function hideInfo() {
-    document.getElementById('info-box').style.display = 'none';
-  }
+    function showInfo(unit, jalan, nama, telefon, status, pautan) {
+      document.getElementById('info-text').innerHTML = `
+        <h3>🏠 ${unit}, ${jalan}</h3>
+        <p><strong>Nama:</strong> ${nama}</p>
+        <p><strong>No. Telefon:</strong> ${telefon}</p>
+        <p><strong>Status Keahlian:</strong> ${status}</p>
+        <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+      `;
+      document.getElementById('info-box').style.display = 'block';
+    }
 
-  function loadMarkers() {
-  fetch(SHEET_URL)
-    .then(response => response.text())
-    .then(text => {
-      const json = JSON.parse(text.substring(47).slice(0, -2));
-      const rows = json.table.rows;
+    function hideInfo() {
+      document.getElementById('info-box').style.display = 'none';
+    }
 
-      rows.forEach(row => {
-        const unit = row.c[0]?.v || "";
-        const jalan = row.c[1]?.v || "";
-        const nama = row.c[2]?.v || "";
-        const telefon = row.c[3]?.v || "";
-        const status = row.c[4]?.v || "";
-        const pautan = row.c[5]?.v || "#";
-        const top = row.c[6]?.v || "0";
-        const left = row.c[7]?.v || "0";
+    async function loadMarkers() {
+      try {
+        const response = await fetch(SHEET_URL);
+        const text = await response.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows;
 
-        // Tentukan kelas warna berdasarkan status
-        const statusClass = status.trim().toLowerCase() === "aktif" ? "aktif" : "tidak-aktif";
+        rows.forEach(row => {
+          const unit = row.c[0]?.v || "";
+          const jalan = row.c[1]?.v || "";
+          const nama = row.c[2]?.v || "";
+          const telefon = row.c[3]?.v || "";
+          const status = row.c[4]?.v || "";
+          const pautan = row.c[5]?.v || "#";
+          const top = parseFloat(row.c[6]?.v || "0");
+          const left = parseFloat(row.c[7]?.v || "0");
 
-        const marker = document.createElement("div");
-        marker.className = `marker ${statusClass}`;
-        marker.style.top = top + "%";
-        marker.style.left = left + "%";
-        marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
-        document.querySelector(".map-inner").appendChild(marker);
-      });
-    });
-}
+          // Pilih warna marker ikut status
+          const isAktif = status.trim().toLowerCase() === "aktif";
+          const statusClass = isAktif ? "aktif" : "tidak-aktif";
+
+          const marker = document.createElement("div");
+          marker.className = `marker ${statusClass}`;
+          marker.style.top = `${top}%`;
+          marker.style.left = `${left}%`;
+          marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
+
+          document.querySelector(".map-inner").appendChild(marker);
+        });
+      } catch (error) {
+        console.error("Ralat memuat data:", error);
+      }
+    }
+
+    window.onload = loadMarkers;
 
 
   
