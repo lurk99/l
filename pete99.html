@@ -46,15 +46,17 @@
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  border: 1px solid white;
 }
 
-.active {
-  background-color: green; /* Marker untuk ahli aktif */
+.marker.aktif {
+  background-color: red; /* Untuk status "Aktif" */
 }
 
-.inactive {
-  background-color: red; /* Marker untuk ahli tidak aktif */
+.marker.tidak-aktif {
+  background-color: gray; /* Untuk selain "Aktif" */
 }
+
 
 #info-box {
   margin: 20px auto;
@@ -131,7 +133,7 @@
 </head>
 <body>
 
-  <h2>Lurkv9.1 Owners ARIYA</h2>
+  <h2>Lurkv9.2 Owners ARIYA</h2>
 
 
   <!-- Map container -->
@@ -164,50 +166,50 @@
  // mrkr
  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
- function showInfo(unit, jalan, nama, telefon, status, pautan) {
-    document.getElementById('info-text').innerHTML = `
-      <h3>🏠 ${unit}, ${jalan}</h3>
-      <p><strong>Nama:</strong> ${nama}</p>
-      <p><strong>No. Telefon:</strong> ${telefon}</p>
-      <p><strong>Status Keahlian:</strong> ${status}</p>
-      <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
-    `;
-    document.getElementById('info-box').style.display = 'block';
-  }
+function showInfo(unit, jalan, nama, telefon, status, pautan) {
+  document.getElementById('info-text').innerHTML = `
+    <h3>🏠 ${unit}, ${jalan}</h3>
+    <p><strong>Nama:</strong> ${nama}</p>
+    <p><strong>No. Telefon:</strong> ${telefon}</p>
+    <p><strong>Status Keahlian:</strong> ${status}</p>
+    <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+  `;
+  document.getElementById('info-box').style.display = 'block';
+}
 
   function hideInfo() {
     document.getElementById('info-box').style.display = 'none';
   }
 
-  async function loadMarkers() {
-    const response = await fetch(SHEET_URL);
-    const text = await response.text();
-    const json = JSON.parse(text.substring(47).slice(0, -2));
-    const rows = json.table.rows;
+  function loadMarkers() {
+  fetch(SHEET_URL)
+    .then(response => response.text())
+    .then(text => {
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      const rows = json.table.rows;
 
-    rows.forEach(row => {
-      const unit = row.c[0]?.v || "";
-      const jalan = row.c[1]?.v || "";
-      const nama = row.c[2]?.v || "";
-      const telefon = row.c[3]?.v || "";
-      const status = row.c[4]?.v || "";
-      const pautan = row.c[5]?.v || "#";
-      const top = row.c[6]?.v || "0";
-      const left = row.c[7]?.v || "0";
+      rows.forEach(row => {
+        const unit = row.c[0]?.v || "";
+        const jalan = row.c[1]?.v || "";
+        const nama = row.c[2]?.v || "";
+        const telefon = row.c[3]?.v || "";
+        const status = row.c[4]?.v || "";
+        const pautan = row.c[5]?.v || "#";
+        const top = row.c[6]?.v || "0";
+        const left = row.c[7]?.v || "0";
 
-      // Tentukan warna berdasarkan status
-      const markerClass = status.toLowerCase() === 'ahli aktif' ? 'active' : 'inactive';
+        // Tentukan kelas warna berdasarkan status
+        const statusClass = status.trim().toLowerCase() === "aktif" ? "aktif" : "tidak-aktif";
 
-      const marker = document.createElement('div');
-      marker.className = `marker ${markerClass}`;
-      marker.style.top = top + "%";
-      marker.style.left = left + "%";
-      marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
-      document.querySelector('.map-inner').appendChild(marker);
+        const marker = document.createElement("div");
+        marker.className = `marker ${statusClass}`;
+        marker.style.top = top + "%";
+        marker.style.left = left + "%";
+        marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
+        document.querySelector(".map-inner").appendChild(marker);
+      });
     });
-  }
-
-  window.onload = loadMarkers;
+}
 
 
   
