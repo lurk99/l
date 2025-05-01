@@ -40,13 +40,14 @@
   margin-right: 10px;
 }
 
+
+
 .banner-title {
   font-size: 18px;
   font-weight: bold;
   white-space: nowrap;
+  text-align: center;
 }
-
-
 
 
 .banner button {
@@ -58,7 +59,7 @@
   cursor: pointer;
   font-weight: bold;
   margin-top: 5px;
-  margin-right: 20px; /* tambah ini untuk masuk ke dalam */
+  margin-right: 30px; /* tambah ini untuk masuk ke dalam */
 }
 
 
@@ -175,7 +176,7 @@
 <div class="banner">
   <div class="banner-left">
     <img src="https://raw.githubusercontent.com/lurk99/img/main/ARIYA-logo-RA-png.png" alt="LogoARIYA" />
-    <center><span class="banner-title">Lurkv10.5 Peta Interaktif ARIYA</span></center>
+    <span class="banner-title">Lurkv10.6 Peta Interaktif ARIYA</span>>
   </div>
   <button onclick="history.back()">← Kembali</button>
 </div>
@@ -202,12 +203,40 @@
 
 const IMAGE_WIDTH = 1148;
 const IMAGE_HEIGHT = 804;
+const markersData = {}; // Untuk kumpul semua pemilik ikut lokasi
+
+function showInfo(key) {
+  const owners = markersData[key];
+  if (!owners || owners.length === 0) return;
+
+  const html = owners.map(o => `
+    <div style="margin-bottom: 10px;">
+      <p><strong>Nama:</strong> ${o.nama}</p>
+      <p><strong>No. Telefon:</strong> ${o.telefon}</p>
+      <p><strong>Status Keahlian:</strong> 
+        <span style="color: ${o.status.toLowerCase() === 'aktif' ? 'green' : 'red'}">${o.status}</span>
+      </p>
+      <p><a href="${o.pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+      <hr>
+    </div>
+  `).join("");
+
+  document.getElementById('info-text').innerHTML = `
+    <h3>🏠 ${owners[0].unit}, ${owners[0].jalan}</h3>
+    ${html}
+  `;
+  document.getElementById('info-box').style.display = 'block';
+}
+
+function hideInfo() {
+  document.getElementById('info-box').style.display = 'none';
+}
 
 async function loadMarkers() {
     
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-    try {
+     try {
     const response = await fetch(SHEET_URL);
     const text = await response.text();
     const json = JSON.parse(text.substring(47).slice(0, -2));
@@ -220,35 +249,45 @@ async function loadMarkers() {
       const telefon = row.c[3]?.v || "";
       const status = row.c[4]?.v || "";
       const pautan = row.c[5]?.v || "#";
-      const coords = row.c[6]?.v || ""; // Asumsikan kolum 7
+      const coords = row.c[6]?.v || ""; // "coords="676,282""
 
       const match = coords.match(/coords="(\d+),(\d+)"/);
       if (!match) return;
 
       const x = parseInt(match[1], 10);
       const y = parseInt(match[2], 10);
-
       const left = (x / IMAGE_WIDTH) * 100;
       const top = (y / IMAGE_HEIGHT) * 100;
 
-      const isAktif = status.trim().toLowerCase() === "aktif";
-      const statusClass = isAktif ? "aktif" : "tidak-aktif";
+      const key = `${unit}|${jalan}`;
+      if (!markersData[key]) markersData[key] = [];
 
-      const marker = document.createElement("div");
-      marker.className = `marker ${statusClass}`;
-      marker.style.left = `${left}%`;
-      marker.style.top = `${top}%`;
-      marker.style.position = "absolute";
+      markersData[key].push({ unit, jalan, nama, telefon, status, pautan });
 
-      marker.onclick = () =>
-        showInfo(unit, jalan, nama, telefon, status, pautan);
+      // Create marker only once per unit|jalan
+      if (markersData[key].length === 1) {
+        const isAktif = status.trim().toLowerCase() === "aktif";
+        const statusClass = isAktif ? "aktif" : "tidak-aktif";
 
-      document.querySelector(".map-inner").appendChild(marker);
+        const marker = document.createElement("div");
+        marker.className = `marker ${statusClass}`;
+        marker.style.left = `${left}%`;
+        marker.style.top = `${top}%`;
+        marker.style.position = "absolute";
+        marker.onclick = () => showInfo(key);
+
+        document.querySelector(".map-inner").appendChild(marker);
+      }
     });
-  } catch (err) {
-    console.error("Gagal muat data:", err);
+  } catch (error) {
+    console.error("Ralat memuat data:", error);
   }
 }
+
+window.onload = loadMarkers;
+
+
+    
 
     window.onload = () => {
       loadMarkers();
