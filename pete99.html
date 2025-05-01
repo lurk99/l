@@ -131,7 +131,7 @@
 </head>
 <body>
 
-  <h2>Lurkv9 Owners ARIYA</h2>
+  <h2>Lurkv9.1 Owners ARIYA</h2>
 
 
   <!-- Map container -->
@@ -164,7 +164,7 @@
  // mrkr
  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-  function showInfo(unit, jalan, nama, telefon, status, pautan) {
+ function showInfo(unit, jalan, nama, telefon, status, pautan) {
     document.getElementById('info-text').innerHTML = `
       <h3>🏠 ${unit}, ${jalan}</h3>
       <p><strong>Nama:</strong> ${nama}</p>
@@ -195,8 +195,11 @@
       const top = row.c[6]?.v || "0";
       const left = row.c[7]?.v || "0";
 
+      // Tentukan warna berdasarkan status
+      const markerClass = status.toLowerCase() === 'ahli aktif' ? 'active' : 'inactive';
+
       const marker = document.createElement('div');
-      marker.className = 'marker';
+      marker.className = `marker ${markerClass}`;
       marker.style.top = top + "%";
       marker.style.left = left + "%";
       marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
