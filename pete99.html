@@ -1,115 +1,111 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARIYA MAP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Peta Interaktif ARIYA</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9f9;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
       padding: 20px;
       text-align: center;
+      background: #f9f9f9;
+    }
+
+    h2 {
+      color: #2c3e50;
     }
 
     .map-container {
       position: relative;
-      width: 100%;
       display: inline-block;
-    }
-
-    .map-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .marker {
       position: absolute;
-      width: 8px;
-      height: 8px;
-      background-color: #2e7d32; /* dark green */
-      border: 2px solid white;
+      width: 10px;
+      height: 10px;
+      background-color: red;
       border-radius: 50%;
       cursor: pointer;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 4px rgba(0,0,0,0.3);
+      border: 2px solid white;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
     }
 
     #info-box {
-margin-top: 20px;
-      padding: 15px;
+      margin: 20px auto;
+      max-width: 400px;
       background: #ffffff;
-      border: 1px solid #dcdcdc;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border: 2px solid #4CAF50;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       display: none;
-      text-align: left;
+text-align: left;
     }
 
     #info-box h3 {
       margin-top: 0;
-      color: #2e7d32;
+      color: #2c3e50;
     }
 
-    #info-box button {
+    #info-box a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    #info-box a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+      padding: 8px 16px;
       margin-top: 10px;
-      padding: 5px 10px;
-      background-color: #2e7d32;
+      background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-    }
-
-    #info-box button:hover {
-      background-color: #1b5e20;
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h2>Lurk Peta Interaktif ARIYA</h2>
+  <h2>LurkMap-v2-Peta Interaktif Komuniti ARIYA</h2>
 
   <div class="map-container">
-    <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman">
-    
-    <!-- Marker Unit 1 -->
-    <div class="marker" style="top: 20%; left: 60%;" onclick="showInfo('Unit 1', 'Penghuni: Mr Lurk')"></div>
+    <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" style="max-width: 100%;" />
 
-    <!-- Marker Unit 2 -->
-    <div class="marker" style="top: 55%; left: 35%;" onclick="showInfo('Unit 2', 'Status: Kosong')"></div>
+    <!-- Marker 1 -->
+    <div class="marker" style="top: 30%; left: 60%;" onclick="showInfo('No. 10, Jalan 20/1', 'Encik Lurk', '012-3456789', 'Ahli Aktif', 'https://example.com/owner10')"></div>
 
-    <!-- Tambah lagi marker di sini... -->
+    <!-- Marker 2 -->
+    <div class="marker" style="top: 55%; left: 40%;" onclick="showInfo('No. 12, Jalan 20/1', 'Pn. Sara', '011-2222333', 'Tidak Aktif', 'https://example.com/owner12')"></div>
+
   </div>
 
   <div id="info-box">
-    <h3 id="unit-title"></h3>
-    <p id="unit-info"></p>
+    <div id="info-text"></div>
     <button onclick="hideInfo()">Tutup</button>
   </div>
-</div>
 
-<script>
-function showInfo(title, info) {
-    document.getElementById('unit-title').innerText = title;
-    document.getElementById('unit-info').innerHTML = info;
-    document.getElementById('info-box').style.display = 'block';
-  }
+  <script>
+    function showInfo(unit, nama, telefon, status, pautan) {
+document.getElementById('info-text').innerHTML = `
+        <h3>🏠 unit</h3>
+        <p><strong>Nama:</strong>{nama}</p>
+        <p><strong>No. Telefon:</strong> telefon</p>
+        <p><strong>Status Keahlian:</strong>{status}</p>
+        <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+      `;
+      document.getElementById('info-box').style.display = 'block';
+    }
 
-  function hideInfo() {
-    document.getElementById('info-box').style.display = 'none';
-  }
-</script>
+    function hideInfo() {
+      document.getElementById('info-box').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
