@@ -29,6 +29,24 @@
   z-index: 999;
 }
 
+
+.banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, #1abc9c, #16a085);
+  padding: 0 15px;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+    
+
 body {
   margin: 0;
   padding-top: 70px; /* ruang untuk banner */
@@ -37,7 +55,7 @@ body {
   text-align: center;
 }
     
-.banner-left {
+.banner-left img.logo-kiri {
   display: flex;
   align-items: center;
 }
@@ -60,6 +78,19 @@ body {
 }
 
 
+
+
+
+.banner-center h3 {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+
+    
 
 .banner-right img.logo-kanan {
   height: 40px;
@@ -211,20 +242,25 @@ body::before {
 <body>
 
 <!-- Banner -->
-  <div class="banner">
+<div class="banner">
   <!-- Logo kiri -->
-  <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" style="height: 40px;" />
+  <div class="banner-left">
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" class="logo-kiri" />
+  </div>
 
   <!-- Tajuk tengah -->
-  <h3 style="flex: 1; text-align: center; margin: 0;">Lurkv11.6 Maklumat Pemilik Rumah ARIYA</h3>
+  <div class="banner-center">
+    <h3>Lurkv11.7 Maklumat Pemilik Rumah ARIYA</h3>
+  </div>
 
-  <!-- Logo kanan -->
-
- <div class="banner-right">
+  <!-- Logo kanan sebagai pautan -->
+  <div class="banner-right">
     <a href="https://lurk99.github.io/l/" target="_blank">
-      <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk" class="logo-kanan" />
+      <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
     </a>
   </div>
+</div>
+
 
 
   
