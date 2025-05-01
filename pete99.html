@@ -18,20 +18,17 @@
     }
 
 
-
-
 .map-container {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
 }
 
-    .map-inner {
+.map-inner {
   position: relative;
   width: 100%;
   padding-top: 66.66%; /* nisbah 3:2 imej, ubah ikut imej anda */
 }
-
 
 .map-inner img {
   position: absolute;
@@ -42,17 +39,21 @@
   object-fit: contain;
 }
 
-
-
 .marker {
   position: absolute;
-  width: 7px;
-  height: 7px;
-  background-color: red;
-  border: 1px solid white;
+  width: 3px;
+  height: 3px;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.active {
+  background-color: green; /* Marker untuk ahli aktif */
+}
+
+.inactive {
+  background-color: red; /* Marker untuk ahli tidak aktif */
 }
 
 #info-box {
@@ -66,6 +67,13 @@
   display: none;
   text-align: left;
 }
+
+
+
+
+
+
+
 
     #info-box h3 {
       margin-top: 0;
@@ -123,7 +131,7 @@
 </head>
 <body>
 
-  <h2>Lurkv8 Owners ARIYA</h2>
+  <h2>Lurkv9 Owners ARIYA</h2>
 
 
   <!-- Map container -->
@@ -133,6 +141,9 @@
     <!-- Marker akan dimasukkan dengan JavaScript -->
   </div>
 </div>
+
+
+  
 
 <div id="info-box">
   <div id="info-text"></div>
