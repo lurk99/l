@@ -54,7 +54,7 @@
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-      border: 1px solid white;
+      border: 0.5px solid white;
     }
 
     .marker.aktif {
@@ -80,6 +80,10 @@
     #info-box h3 {
       margin-top: 0;
       color: #2c3e50;
+    }
+
+        #info-box p {
+      margin: 6px 0;
     }
 
     #info-box a {
@@ -133,7 +137,7 @@
 </head>
 <body>
 
-  <h2>Lurkv9.5 Maklumat Pemilik Rumah ARIYA</h2>
+  <h2>Lurkv9.6 Maklumat Pemilik Rumah ARIYA</h2>
 
 
 
@@ -168,61 +172,57 @@
  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
 
-    function showInfo(unit, jalan, nama, telefon, status, pautan) {
-      document.getElementById('info-text').innerHTML = `
-        <h3>🏠 ${unit}, ${jalan}</h3>
-        <p><strong>Nama:</strong> ${nama}</p>
-        <p><strong>No. Telefon:</strong> ${telefon}</p>
-        <p><strong>Status Keahlian:</strong> ${status}</p>
-        <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
-      `;
-      document.getElementById('info-box').style.display = 'block';
+    fetch(SHEET_URL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.trim().split("\n").map(r => r.split(","));
+        const headers = rows[0];
+        const data = rows.slice(1).map(r => {
+          const obj = {};
+          headers.forEach((h, i) => obj[h.trim()] = r[i]?.trim());
+          return obj;
+        });
+
+        const locationMap = {};
+
+        data.forEach(row => {
+          const key = `${row["Unit"]}, ${row["Jalan"]}`;
+          if (!locationMap[key]) locationMap[key] = [];
+          locationMap[key].push(row);
+        });
+
+        for (const [locKey, owners] of Object.entries(locationMap)) {
+          const top = owners[0]["Top"];
+          const left = owners[0]["Left"];
+          const status = owners[0]["Status Ahli"];
+          const marker = document.createElement("div");
+          marker.className = "marker " + (status.toLowerCase().includes("aktif") ? "aktif" : "tidak-aktif");
+          marker.style.top = `${top}%`;
+          marker.style.left = `${left}%`;
+          marker.onclick = () => showInfo(locKey, owners);
+          document.querySelector(".map-inner").appendChild(marker);
+        }
+      });
+
+    function showInfo(location, owners) {
+      let html = `<h3>🏠 ${location}</h3>`;
+      owners.forEach(o => {
+        const warna = o["Status Ahli"].toLowerCase().includes("aktif") ? "green" : "red";
+        html += `
+          <p><strong>Nama:</strong> ${o["Nama"]}</p>
+          <p><strong>Telefon:</strong> ${o["Telefon"]}</p>
+          <p><strong>Status:</strong> <span style="color:${warna}; font-weight:bold">${o["Status Ahli"]}</span></p>
+          <p><a href="${o["Pautan"]}" target="_blank">🔗 Maklumat Lanjut</a></p>
+          <hr />
+        `;
+      });
+      document.getElementById("info-text").innerHTML = html;
+      document.getElementById("info-box").style.display = "block";
     }
 
     function hideInfo() {
-      document.getElementById('info-box').style.display = 'none';
+      document.getElementById("info-box").style.display = "none";
     }
-
-    async function loadMarkers() {
-      try {
-        const response = await fetch(SHEET_URL);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-
-        rows.forEach(row => {
-          const unit = row.c[0]?.v || "";
-          const jalan = row.c[1]?.v || "";
-          const nama = row.c[2]?.v || "";
-          const telefon = row.c[3]?.v || "";
-          const status = row.c[4]?.v || "";
-          const pautan = row.c[5]?.v || "#";
-          const top = parseFloat(row.c[6]?.v || "0");
-          const left = parseFloat(row.c[7]?.v || "0");
-
-          // Pilih warna marker ikut status
-          const isAktif = status.trim().toLowerCase() === "aktif";
-          const statusClass = isAktif ? "aktif" : "tidak-aktif";
-
-          const marker = document.createElement("div");
-          marker.className = `marker ${statusClass}`;
-
-
-marker.style.top = `${top}%`;
-marker.style.left = `${left}%`;
-marker.style.position = 'absolute'; // Wajib
-
-          
-          marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
-
-          document.querySelector(".map-inner").appendChild(marker);
-        });
-      } catch (error) {
-        console.error("Ralat memuat data:", error);
-      }
-    }
-
-    window.onload = loadMarkers;
 
 
   
