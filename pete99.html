@@ -17,10 +17,12 @@
       color: #2c3e50;
     }
 
+
     .map-container {
-      position: relative;
-      display: inline-block;
-    }
+  position: relative;
+  display: inline-block;
+  height: 600px; /* Tetapkan tinggi tetap */
+}
 
     .marker {
       position: absolute;
@@ -68,11 +70,40 @@ border: 2px solid #4CAF50;
       border-radius: 6px;
       cursor: pointer;
     }
+
+
+.footer {
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  text-shadow: 1px 1px 1.5px rgba(255, 255, 255, 0.6);
+  opacity: 0; /* Mulakan dengan opacity 0 (tak nampak) */
+  animation: fadeIn 5s ease-in-out infinite; /* Ubah jadi infinite untuk berulang tanpa henti */
+}
+
+/* fade-in loop */
+@keyframes fadeIn {
+  0% {
+    opacity: 1; /* stat */
+  }
+  50% {
+    opacity: 0; /* nmpk */
+  }
+  100% {
+    opacity: 1; /* las */
+  }
+}
+
+    
+    
   </style>
 </head>
 <body>
 
-  <h2>Lurkv6 Owners ARIYA</h2>
+  <h2>Lurkv7 Owners ARIYA</h2>
 
 
   <!-- Map container -->
@@ -87,6 +118,13 @@ border: 2px solid #4CAF50;
   <div id="info-text"></div>
   <button onclick="hideInfo()">Tutup</button>
 </div>
+  
+
+  <!-- ftr -->
+  <div class="footer">
+    &copy; <span id="currentYear"></span> Developer: Lurk
+  </div>
+
   
   
 <script>
@@ -135,6 +173,11 @@ border: 2px solid #4CAF50;
   }
 
   window.onload = loadMarkers;
+
+ // yroto
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+
+  
 </script>
 
 
