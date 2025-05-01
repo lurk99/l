@@ -72,7 +72,7 @@ border: 2px solid #4CAF50;
 </head>
 <body>
 
-  <h2>Lurkv3 Peta Interaktif Komuniti ARIYA</h2>
+  <h2>Lurkv4 Peta Interaktif Komuniti ARIYA</h2>
 
   <div class="map-container">
     <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" style="max-width: 100%;" />
@@ -90,22 +90,54 @@ border: 2px solid #4CAF50;
 <button onclick="hideInfo()">Tutup</button>
   </div>
 
-  <script>
-    function showInfo(unit, nama, telefon, status, pautan) {
-      document.getElementById('info-text').innerHTML = `
-        <h3>🏠 unit</h3>
-        <p><strong>Nama:</strong>{nama}</p>
-        <p><strong>No. Telefon:</strong> telefon</p>
-        <p><strong>Status Keahlian:</strong>{status}</p>
-        <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
-      `;
-      document.getElementById('info-box').style.display = 'block';
-    }
+<script>
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-    function hideInfo() {
-      document.getElementById('info-box').style.display = 'none';
-    }
-  </script>
+  function showInfo(unit, jalan, nama, telefon, status, pautan) {
+    document.getElementById('info-text').innerHTML = `
+      <h3>🏠 ${unit}, ${jalan}</h3>
+      <p><strong>Nama:</strong> ${nama}</p>
+      <p><strong>No. Telefon:</strong> ${telefon}</p>
+      <p><strong>Status Keahlian:</strong> ${status}</p>
+      <p><a href="${pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+    `;
+    document.getElementById('info-box').style.display = 'block';
+  }
+
+  function hideInfo() {
+    document.getElementById('info-box').style.display = 'none';
+  }
+
+  async function loadMarkers() {
+    const response = await fetch(SHEET_URL);
+    const text = await response.text();
+
+    // Bersihkan JSON ganjil dari Google
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+
+    rows.forEach(row => {
+      const unit = row.c[0]?.v || "";
+      const jalan = row.c[1]?.v || "";
+      const nama = row.c[2]?.v || "";
+      const telefon = row.c[3]?.v || "";
+      const status = row.c[4]?.v || "";
+      const pautan = row.c[5]?.v || "#";
+      const top = row.c[6]?.v || "0";
+      const left = row.c[7]?.v || "0";
+
+      const marker = document.createElement('div');
+      marker.className = 'marker';
+      marker.style.top = top + "%";
+      marker.style.left = left + "%";
+      marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
+      document.querySelector('.map-container').appendChild(marker);
+    });
+  }
+
+  window.onload = loadMarkers;
+</script>
+
 
 </body>
 </html>
