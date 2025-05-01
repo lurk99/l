@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lurkv10 Peta Interaktif ARIYA</title>
+  <title>LurkMap ARIYA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,42 +13,50 @@
       text-align: center;
     }
 
-    /* Banner */
-    .banner {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: linear-gradient(to right, #1abc9c, #16a085);
-      color: white;
-      padding: 15px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+   /* Banner */
+.banner {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: linear-gradient(to right, #1abc9c, #16a085);
+  color: white;
+  padding: 10px 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-    .banner img {
-      height: 40px;
-      margin-right: 10px;
-    }
+.banner-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
 
-    .banner h1 {
-      margin: 0;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-    }
+.banner-left img {
+  height: 40px;
+  margin-right: 10px;
+}
 
-    .banner button {
-      background: white;
-      color: #16a085;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-    }
+.banner-title {
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.banner button {
+  background: white;
+  color: #16a085;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
 
     .map-container {
       width: 100%;
@@ -73,12 +81,12 @@
 
     .marker {
       position: absolute;
-      width: 6px;
-      height: 6px;
+      width: 3px;
+      height: 3px;
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-      border: 1px solid white;
+      border: 0.5px solid white;
     }
 
     .marker.aktif {
@@ -157,11 +165,14 @@
 </head>
 <body>
 
-  <!-- Banner -->
-  <div class="banner">
-    <h1><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Logo_Universiti_Malaya.png" alt="Logo" /> Lurkv10 Peta Interaktif ARIYA</h1>
-    <button onclick="history.back()">← Kembali</button>
+<!-- Banner -->
+<div class="banner">
+  <div class="banner-left">
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/ARIYA-logo-RA-png.png" alt="LogoARIYA" />
+    <span class="banner-title">Lurkv10.1 Peta Interaktif ARIYA</span>
   </div>
+  <button onclick="history.back()">← Kembali</button>
+</div>
 
   <!-- Peta -->
   <div class="map-container">
