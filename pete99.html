@@ -17,50 +17,51 @@
 .banner {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  background: linear-gradient(to right, #1abc9c, #16a085);
+  background: linear-gradient(90deg, #1abc9c, #16a085);
   color: white;
-  padding: 10px 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 999;
+  padding: 10px 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 999;
 }
 
 .banner-left {
   display: flex;
   align-items: center;
-  flex: 1;
 }
 
-.banner-left img {
+.banner img {
   height: 40px;
-  margin-right: 10px;
+  width: 40px;
+  margin-right: 12px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  border: 2px solid white;
 }
-
-
 
 .banner-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  white-space: nowrap;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
   text-align: center;
+  flex-grow: 1;
 }
-
 
 .banner button {
   background: white;
   color: #16a085;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 6px 25px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  margin-top: 5px;
-  margin-right: 30px; /* tambah ini untuk masuk ke dalam */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
 
 
     
@@ -170,16 +171,19 @@
     }
   </style>
 </head>
-<body>
+<body>{
+  padding-top: 70px;
+}
 
 <!-- Banner -->
 <div class="banner">
   <div class="banner-left">
-    <img src="https://raw.githubusercontent.com/lurk99/img/main/ARIYA-logo-RA-png.png" alt="LogoARIYA" />
-    <span class="banner-title">Lurkv10.6 Peta Interaktif ARIYA</span>>
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/ariya-logo.png" alt="Logo ARIYA">
+    <div class="banner-title">Lurkv10.7 - Maklumat Pemilik Rumah ARIYA</div>
   </div>
-  <button onclick="history.back()">← Kembali</button>
+  <button onclick="window.history.back()">⬅ Kembali</button>
 </div>
+
 
   <!-- Peta -->
   <div class="map-container">
