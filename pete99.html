@@ -142,7 +142,7 @@
     }
 
     button {
-      padding: 8px 16px;
+      padding: 8px 25px;
       margin-top: 10px;
       background-color: #4CAF50;
       color: white;
@@ -175,7 +175,7 @@
 <div class="banner">
   <div class="banner-left">
     <img src="https://raw.githubusercontent.com/lurk99/img/main/ARIYA-logo-RA-png.png" alt="LogoARIYA" />
-    <span class="banner-title">Lurkv10.3 Peta Interaktif ARIYA</span>
+    <span class="banner-title"><center>Lurkv10.4 Peta Interaktif ARIYA</center></span>
   </div>
   <button onclick="history.back()">← Kembali</button>
 </div>
@@ -199,72 +199,56 @@
   </div>
 
   <script>
+
+const IMAGE_WIDTH = 1148;
+const IMAGE_HEIGHT = 804;
+
+async function loadMarkers() {
+    
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-    const unitData = {};
+    try {
+    const response = await fetch(SHEET_URL);
+    const text = await response.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
 
-    function showInfo(unit, jalan) {
-      const key = `${unit}|${jalan}`;
-      const owners = unitData[key] || [];
+    rows.forEach(row => {
+      const unit = row.c[0]?.v || "";
+      const jalan = row.c[1]?.v || "";
+      const nama = row.c[2]?.v || "";
+      const telefon = row.c[3]?.v || "";
+      const status = row.c[4]?.v || "";
+      const pautan = row.c[5]?.v || "#";
+      const coords = row.c[6]?.v || ""; // Asumsikan kolum 7
 
-      let html = `<h3>🏠 ${unit}, ${jalan}</h3>`;
-      owners.forEach(owner => {
-        const statusClass = owner.status.toLowerCase() === "aktif" ? "aktif" : "tidak-aktif";
-        html += `
-          <p><span>Nama:</span> ${owner.nama}</p>
-          <p><span>No. Telefon:</span> ${owner.telefon}</p>
-          <p><span>Status Keahlian:</span> <span class="${statusClass}">${owner.status}</span></p>
-          <p><a href="${owner.pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
-          <hr/>
-        `;
-      });
+      const match = coords.match(/coords="(\d+),(\d+)"/);
+      if (!match) return;
 
-      document.getElementById('info-text').innerHTML = html;
-      document.getElementById('info-box').style.display = 'block';
-    }
+      const x = parseInt(match[1], 10);
+      const y = parseInt(match[2], 10);
 
-    function hideInfo() {
-      document.getElementById('info-box').style.display = 'none';
-    }
+      const left = (x / IMAGE_WIDTH) * 100;
+      const top = (y / IMAGE_HEIGHT) * 100;
 
-    async function loadMarkers() {
-      try {
-        const response = await fetch(SHEET_URL);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
+      const isAktif = status.trim().toLowerCase() === "aktif";
+      const statusClass = isAktif ? "aktif" : "tidak-aktif";
 
-        const addedCoords = new Set();
+      const marker = document.createElement("div");
+      marker.className = `marker ${statusClass}`;
+      marker.style.left = `${left}%`;
+      marker.style.top = `${top}%`;
+      marker.style.position = "absolute";
 
-        rows.forEach(row => {
-          const unit = row.c[0]?.v || "";
-          const jalan = row.c[1]?.v || "";
-          const nama = row.c[2]?.v || "";
-          const telefon = row.c[3]?.v || "";
-          const status = row.c[4]?.v || "";
-          const pautan = row.c[5]?.v || "#";
-          const top = parseFloat(row.c[6]?.v || "0");
-          const left = parseFloat(row.c[7]?.v || "0");
+      marker.onclick = () =>
+        showInfo(unit, jalan, nama, telefon, status, pautan);
 
-          const key = `${unit}|${jalan}`;
-          if (!unitData[key]) unitData[key] = [];
-          unitData[key].push({ nama, telefon, status, pautan });
-
-          const coordKey = `${top}|${left}`;
-          if (addedCoords.has(coordKey)) return;
-          addedCoords.add(coordKey);
-
-          const marker = document.createElement("div");
-          marker.className = `marker ${status.trim().toLowerCase() === "aktif" ? "aktif" : "tidak-aktif"}`;
-          marker.style.top = `${top}%`;
-          marker.style.left = `${left}%`;
-          marker.onclick = () => showInfo(unit, jalan);
-          document.querySelector(".map-inner").appendChild(marker);
-        });
-      } catch (error) {
-        console.error("Ralat memuat data:", error);
-      }
-    }
+      document.querySelector(".map-inner").appendChild(marker);
+    });
+  } catch (err) {
+    console.error("Gagal muat data:", err);
+  }
+}
 
     window.onload = () => {
       loadMarkers();
