@@ -2,19 +2,34 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ARIYA MAP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lurk ARIYA MAP</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .map-container {
+      position: relative;
       text-align: center;
     }
 
-    img {
-      max-width: 100%;
+    .map-container img {
+      width: 100%;
       height: auto;
+    }
+
+    .marker {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: red;
+      border-radius: 50%;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      border: 2px solid white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
     }
 
     #info-box {
@@ -23,39 +38,31 @@
       left: 50%;
       transform: translateX(-50%);
       background: #fff;
-      border: 2px solid #4CAF50;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      padding: 10px 20px;
+border-radius: 8px;
+      border: 1px solid #ccc;
       display: none;
-      z-index: 999;
-    }
-
-    #info-box button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-<h2>Peta Interaktif ARIYA</h2>
-<img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" usemap="#pelan" alt="Peta Taman">
-<map name="pelan">
-  <area shape="rect" coords="635,153,692,207" href="javascript:void(0);" onclick="showInfo('Unit 1<br>Penghuni: Mr Lurk')" alt="Unit 1">
-  <area shape="rect" coords="392,389,427,434" href="javascript:void(0);" onclick="showInfo('Unit 2<br>Status: Kosong')" alt="Unit 2">
-</map>
+<div class="map-container">
+  <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman">
+
+  <!-- Marker untuk Unit 1 -->
+  <div class="marker" style="top: 20%; left: 60%;" onclick="showInfo('Unit 1<br>Penghuni: Mr Lurk')"></div>
+
+  <!-- Marker untuk Unit 2 -->
+  <div class="marker" style="top: 55%; left: 35%;" onclick="showInfo('Unit 2<br>Status: Kosong')"></div>
+</div>
 
 <div id="info-box">
   <div id="info-text"></div>
   <button onclick="hideInfo()">Tutup</button>
 </div>
 
-<script src="imageMapResizer.min.js"></script>
 <script>
   function showInfo(info) {
     document.getElementById('info-text').innerHTML = info;
@@ -65,10 +72,6 @@
   function hideInfo() {
     document.getElementById('info-box').style.display = 'none';
   }
-
-  window.onload = function() {
-    imageMapResize();
-  };
 </script>
 
 </body>
