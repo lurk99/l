@@ -25,31 +25,32 @@
       color: #2c3e50;
     }
 
-    .map-container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+   .map-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
 
 .map-inner {
   position: relative;
   width: 100%;
-  height: 600px; /* tetapkan tinggi */
-     }
+  padding-top: 66.66%; /* Nisbah 3:2 */
+}
 
-    .map-inner img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+.map-inner img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 
     .marker {
       position: absolute;
-      width: 4px;
-      height: 4px;
+      width: 3px;
+      height: 3px;
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
@@ -132,14 +133,18 @@
 </head>
 <body>
 
-  <h2>Lurkv9.4 Maklumat Pemilik Rumah ARIYA</h2>
+  <h2>Lurkv9.5 Maklumat Pemilik Rumah ARIYA</h2>
 
-  <div class="map-container">
-    <div class="map-inner">
+
+
+<div class="map-container">
+  <div class="map-inner">
       <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" />
-      <!-- Marker akan ditambah melalui JavaScript -->
-    </div>
+    <!-- Marker akan ditambah melalui JS di sini -->
   </div>
+</div>
+  
+  
 
   <div id="info-box">
     <div id="info-text"></div>
@@ -201,8 +206,13 @@
 
           const marker = document.createElement("div");
           marker.className = `marker ${statusClass}`;
-          marker.style.top = `${top}%`;
-          marker.style.left = `${left}%`;
+
+
+marker.style.top = `${top}%`;
+marker.style.left = `${left}%`;
+marker.style.position = 'absolute'; // Wajib
+
+          
           marker.onclick = () => showInfo(unit, jalan, nama, telefon, status, pautan);
 
           document.querySelector(".map-inner").appendChild(marker);
