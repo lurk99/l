@@ -3,58 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lurkv3 Peta Interaktif ARIYA</title>
+  <title>Lurkv10 Peta Interaktif ARIYA</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      padding-top: 80px; /* ruang untuk banner */
       background: #f9f9f9;
+      text-align: center;
     }
 
-      font-family: Arial, sans-serif;
+    /* Banner */
+    .banner {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: linear-gradient(to right, #1abc9c, #16a085);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .banner img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .banner h1 {
       margin: 0;
-      padding-top: 70px; /* ruang untuk banner */
-      background: #f9f9f9;
-      text-align: center;
-    }
-    
-
-    h2 {
-      color: #2c3e50;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
     }
 
-   .map-container {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
+    .banner button {
+      background: white;
+      color: #16a085;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-.map-inner {
-  position: relative;
-  width: 100%;
-  padding-top: 66.66%; /* Nisbah 3:2 */
-}
+    .map-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-.map-inner img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+    .map-inner {
+      position: relative;
+      width: 100%;
+      padding-top: 66.66%; /* Nisbah 3:2 */
+    }
 
+    .map-inner img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     .marker {
       position: absolute;
-      width: 3px;
-      height: 3px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       cursor: pointer;
       box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-      border: 0.5px solid white;
+      border: 1px solid white;
     }
 
     .marker.aktif {
@@ -82,8 +106,16 @@
       color: #2c3e50;
     }
 
-        #info-box p {
-      margin: 6px 0;
+    #info-box p span {
+      font-weight: bold;
+    }
+
+    #info-box .aktif {
+      color: green;
+    }
+
+    #info-box .tidak-aktif {
+      color: red;
     }
 
     #info-box a {
@@ -105,135 +137,122 @@
       cursor: pointer;
     }
 
+    .footer {
+      margin-top: 40px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.85);
+      text-shadow: 1px 1px 1.5px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+      animation: fadeIn 5s ease-in-out infinite;
+    }
 
-.footer {
-  margin-top: 40px;
-  padding-top: 15px;
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.85);
-  text-align: center;
-  text-shadow: 1px 1px 1.5px rgba(255, 255, 255, 0.6);
-  opacity: 0; /* Mulakan dengan opacity 0 (tak nampak) */
-  animation: fadeIn 5s ease-in-out infinite; /* Ubah jadi infinite untuk berulang tanpa henti */
-}
-
-/* fade-in loop */
-@keyframes fadeIn {
-  0% {
-    opacity: 1; /* stat */
-  }
-  50% {
-    opacity: 0; /* nmpk */
-  }
-  100% {
-    opacity: 1; /* las */
-  }
-}
-
-    
-    
+    @keyframes fadeIn {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
 
-  <h2>Lurkv9.6 Maklumat Pemilik Rumah ARIYA</h2>
-
-
-
-<div class="map-container">
-  <div class="map-inner">
-      <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" />
-    <!-- Marker akan ditambah melalui JS di sini -->
+  <!-- Banner -->
+  <div class="banner">
+    <h1><img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Logo_Universiti_Malaya.png" alt="Logo" /> Lurkv10 Peta Interaktif ARIYA</h1>
+    <button onclick="history.back()">← Kembali</button>
   </div>
-</div>
-  
-  
 
+  <!-- Peta -->
+  <div class="map-container">
+    <div class="map-inner">
+      <img src="https://raw.githubusercontent.com/lurk99/img/refs/heads/main/IMG_9366.jpeg" alt="Peta Taman" />
+    </div>
+  </div>
+
+  <!-- Info Box -->
   <div id="info-box">
     <div id="info-text"></div>
     <button onclick="hideInfo()">Tutup</button>
   </div>
 
-
-
-  
-
-  <!-- ftr -->
+  <!-- Footer -->
   <div class="footer">
     &copy; <span id="currentYear"></span> Developer: Lurk
   </div>
 
-  
-  
-<script>
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
- // mrkr
- const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
+    const unitData = {};
 
+    function showInfo(unit, jalan) {
+      const key = `${unit}|${jalan}`;
+      const owners = unitData[key] || [];
 
-    fetch(SHEET_URL)
-      .then(res => res.text())
-      .then(csv => {
-        const rows = csv.trim().split("\n").map(r => r.split(","));
-        const headers = rows[0];
-        const data = rows.slice(1).map(r => {
-          const obj = {};
-          headers.forEach((h, i) => obj[h.trim()] = r[i]?.trim());
-          return obj;
-        });
-
-        const locationMap = {};
-
-        data.forEach(row => {
-          const key = `${row["Unit"]}, ${row["Jalan"]}`;
-          if (!locationMap[key]) locationMap[key] = [];
-          locationMap[key].push(row);
-        });
-
-        for (const [locKey, owners] of Object.entries(locationMap)) {
-          const top = owners[0]["Top"];
-          const left = owners[0]["Left"];
-          const status = owners[0]["Status Ahli"];
-          const marker = document.createElement("div");
-          marker.className = "marker " + (status.toLowerCase().includes("aktif") ? "aktif" : "tidak-aktif");
-          marker.style.top = `${top}%`;
-          marker.style.left = `${left}%`;
-          marker.onclick = () => showInfo(locKey, owners);
-          document.querySelector(".map-inner").appendChild(marker);
-        }
-      });
-
-    function showInfo(location, owners) {
-      let html = `<h3>🏠 ${location}</h3>`;
-      owners.forEach(o => {
-        const warna = o["Status Ahli"].toLowerCase().includes("aktif") ? "green" : "red";
+      let html = `<h3>🏠 ${unit}, ${jalan}</h3>`;
+      owners.forEach(owner => {
+        const statusClass = owner.status.toLowerCase() === "aktif" ? "aktif" : "tidak-aktif";
         html += `
-          <p><strong>Nama:</strong> ${o["Nama"]}</p>
-          <p><strong>Telefon:</strong> ${o["Telefon"]}</p>
-          <p><strong>Status:</strong> <span style="color:${warna}; font-weight:bold">${o["Status Ahli"]}</span></p>
-          <p><a href="${o["Pautan"]}" target="_blank">🔗 Maklumat Lanjut</a></p>
-          <hr />
+          <p><span>Nama:</span> ${owner.nama}</p>
+          <p><span>No. Telefon:</span> ${owner.telefon}</p>
+          <p><span>Status Keahlian:</span> <span class="${statusClass}">${owner.status}</span></p>
+          <p><a href="${owner.pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+          <hr/>
         `;
       });
-      document.getElementById("info-text").innerHTML = html;
-      document.getElementById("info-box").style.display = "block";
+
+      document.getElementById('info-text').innerHTML = html;
+      document.getElementById('info-box').style.display = 'block';
     }
 
     function hideInfo() {
-      document.getElementById("info-box").style.display = "none";
+      document.getElementById('info-box').style.display = 'none';
     }
 
+    async function loadMarkers() {
+      try {
+        const response = await fetch(SHEET_URL);
+        const text = await response.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        const rows = json.table.rows;
 
-  
+        const addedCoords = new Set();
 
+        rows.forEach(row => {
+          const unit = row.c[0]?.v || "";
+          const jalan = row.c[1]?.v || "";
+          const nama = row.c[2]?.v || "";
+          const telefon = row.c[3]?.v || "";
+          const status = row.c[4]?.v || "";
+          const pautan = row.c[5]?.v || "#";
+          const top = parseFloat(row.c[6]?.v || "0");
+          const left = parseFloat(row.c[7]?.v || "0");
 
- // yroto
-    document.getElementById("currentYear").textContent = new Date().getFullYear();
+          const key = `${unit}|${jalan}`;
+          if (!unitData[key]) unitData[key] = [];
+          unitData[key].push({ nama, telefon, status, pautan });
 
-  
-</script>
+          const coordKey = `${top}|${left}`;
+          if (addedCoords.has(coordKey)) return;
+          addedCoords.add(coordKey);
 
+          const marker = document.createElement("div");
+          marker.className = `marker ${status.trim().toLowerCase() === "aktif" ? "aktif" : "tidak-aktif"}`;
+          marker.style.top = `${top}%`;
+          marker.style.left = `${left}%`;
+          marker.onclick = () => showInfo(unit, jalan);
+          document.querySelector(".map-inner").appendChild(marker);
+        });
+      } catch (error) {
+        console.error("Ralat memuat data:", error);
+      }
+    }
 
+    window.onload = () => {
+      loadMarkers();
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+    };
+  </script>
 </body>
 </html>
