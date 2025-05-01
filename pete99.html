@@ -51,18 +51,29 @@
   flex-grow: 1;
 }
 
+
+
+
 .banner button {
   background: white;
   color: #16a085;
   border: none;
-  padding: 6px 30px;
+  padding: 6px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  margin-right: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-
+.banner button:hover {
+  background: #16a085;
+  color: white;
+}
 
     
 
@@ -182,6 +193,16 @@
   <button onclick="window.history.back()">⬅ Kembali</button>
 </div>
 
+
+<div class="banner">
+  <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" style="height: 40px;" />
+  <h1 style="flex: 1; text-align: center; color: white;">Lurkv10.9 Maklumat Pemilik Rumah ARIYA</h1>
+  <button onclick="history.back()">
+    ⬅ Kembali
+  </button>
+</div>
+
+  
 
   <!-- Peta -->
   <div class="map-container">
