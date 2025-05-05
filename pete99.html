@@ -202,22 +202,35 @@ body {
 
 
 
-/* body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://raw.githubusercontent.com/lurk99/img/main/Ariya-bannr.png');
-  background-image: url('https://raw.githubusercontent.com/lurk99/img/main/photo-bgpccoding.png');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.1; /* laraskan ketelusan: 0.1 = sangat samar, 1 = penuh jelas
-  z-index: -1; /* pastikan latar belakang ini berada di bawah semua kandungan
-} */
 
+.selection-box {
+  margin: 20px auto 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
+.selection-box select,
+.selection-box button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+.selection-box button {
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.selection-box button:hover {
+  background-color: #16a085;
+}
 
 
 
@@ -245,6 +258,19 @@ body {
       <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
     </a>
   </div>
+</div>
+
+
+
+<!-- Tambah selepas banner dan sebelum peta -->
+<div class="selection-box">
+  <select id="unitSelect">
+    <option value="">Pilih Unit</option>
+  </select>
+  <select id="jalanSelect">
+    <option value="">Pilih Jalan</option>
+  </select>
+  <button onclick="searchBySelection()">Cari Pemilik</button>
 </div>
 
 
@@ -305,11 +331,14 @@ async function loadMarkers() {
     
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
 
-     try {
+    try {
     const response = await fetch(SHEET_URL);
     const text = await response.text();
     const json = JSON.parse(text.substring(47).slice(0, -2));
     const rows = json.table.rows;
+
+    const unitSet = new Set();
+    const jalanSet = new Set();
 
     rows.forEach(row => {
       const unit = row.c[0]?.v || "";
@@ -333,7 +362,11 @@ async function loadMarkers() {
 
       markersData[key].push({ unit, jalan, nama, telefon, status, pautan });
 
-      // Create marker only once per unit|jalan
+      // Tambah ke dropdown sets
+      unitSet.add(unit);
+      jalanSet.add(jalan);
+
+      // Create marker hanya sekali per lokasi
       if (markersData[key].length === 1) {
         const isAktif = status.trim().toLowerCase() === "aktif";
         const statusClass = isAktif ? "aktif" : "tidak-aktif";
@@ -348,12 +381,49 @@ async function loadMarkers() {
         document.querySelector(".map-inner").appendChild(marker);
       }
     });
+
+    // Isi dropdown selepas data dimuat
+    fillDropdowns(unitSet, jalanSet);
+
   } catch (error) {
     console.error("Ralat memuat data:", error);
   }
 }
 
-window.onload = loadMarkers;
+function fillDropdowns(unitSet, jalanSet) {
+  const unitSelect = document.getElementById("unitSelect");
+  const jalanSelect = document.getElementById("jalanSelect");
+
+  [...unitSet].sort().forEach(unit => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    unitSelect.appendChild(option);
+  });
+
+  [...jalanSet].sort().forEach(jalan => {
+    const option = document.createElement("option");
+    option.value = jalan;
+    option.textContent = jalan;
+    jalanSelect.appendChild(option);
+  });
+}
+
+function searchBySelection() {
+  const unit = document.getElementById("unitSelect").value;
+  const jalan = document.getElementById("jalanSelect").value;
+
+  const key = `${unit}|${jalan}`;
+  if (markersData[key]) {
+    showInfo(key);
+  } else {
+    document.getElementById("info-text").innerHTML = `
+      <h3>Maklumat tidak dijumpai</h3>
+      <p>Sila pastikan Unit dan Jalan dipilih dengan betul.</p>
+    `;
+    document.getElementById("info-box").style.display = 'block';
+  }
+}
 
 
     
