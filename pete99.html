@@ -130,17 +130,26 @@ body {
       background-color: gray;
     }
 
-    #info-box {
-      margin: 20px auto;
-      max-width: 400px;
-      background: #ffffff;
-      border: 2px solid #4CAF50;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      display: none;
-      text-align: left;
-    }
+#info-box {
+  margin: 20px auto;
+  max-width: 400px;
+  background: #ffffff;
+  border: 2px solid #4CAF50;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+#info-box.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
 
     #info-box h3 {
       margin-top: 0;
@@ -169,14 +178,22 @@ body {
     }
 
     button {
-      padding: 8px 25px;
-      margin-top: 10px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
+  padding: 8px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
     }
+
+
+.button:hover {
+  background-color: #c0392b;
+}
+
+
 
 
 
@@ -203,8 +220,19 @@ body {
 
 
 
+.selection-wrapper {
+  margin: 30px auto 10px;
+  text-align: center;
+}
+
+.selection-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
 .selection-box {
-  margin: 20px auto 10px;
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -218,6 +246,8 @@ body {
   border: 1px solid #ccc;
   border-radius: 6px;
   outline: none;
+  min-width: 150px;
+  box-sizing: border-box;
 }
 
 .selection-box button {
@@ -232,6 +262,26 @@ body {
   background-color: #16a085;
 }
 
+
+
+.alert-text {
+  color: #d32f2f;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+
+.dropdown {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
 
 
 
@@ -262,15 +312,18 @@ body {
 
 
 
-<!-- Tambah selepas banner dan sebelum peta -->
-<div class="selection-box">
-  <select id="unitSelect">
-    <option value="">Pilih Unit</option>
+<!-- combobox -->
+<div style="margin: 20px auto; max-width: 400px; text-align: center;">
+  <h3 style="margin-bottom: 10px;">🔍 Carian Pemilik</h3>
+  <select id="searchField" class="dropdown">
+    <option value="unit">Unit</option>
+    <option value="jalan">Jalan</option>
+    <option value="nama">Nama</option>
+    <option value="telefon">Telefon</option>
+    <option value="status">Status Ahli</option>
   </select>
-  <select id="jalanSelect">
-    <option value="">Pilih Jalan</option>
-  </select>
-  <button onclick="searchBySelection()">Cari Pemilik</button>
+  <input type="text" id="searchInput" placeholder="Masukkan carian..." class="dropdown" style="width: 60%; margin-top: 10px;" />
+  <button onclick="searchData()" class="button" style="margin-top: 10px;">Cari</button>
 </div>
 
 
@@ -286,15 +339,26 @@ body {
   <!-- Info Box -->
   <div id="info-box">
     <div id="info-text"></div>
-    <button onclick="hideInfo()">Tutup</button>
+    <button class="button" onclick="hideInfo()">Tutup</button>
   </div>
+
+
+
+
+
+
+
+
 
   <!-- Footer -->
   <div class="footer">
     &copy; <span id="currentYear"></span> Developer: Lurk
   </div>
 
-  <script>
+
+   
+
+<script>
 
 const IMAGE_WIDTH = 1148;
 const IMAGE_HEIGHT = 804;
@@ -304,14 +368,14 @@ function showInfo(key) {
   const owners = markersData[key];
   if (!owners || owners.length === 0) return;
 
-  const html = owners.map(o => `
+  const html = owners.map((o, index) => `
     <div style="margin-bottom: 10px;">
       <p><strong>Nama:</strong> ${o.nama}</p>
       <p><strong>No. Telefon:</strong> ${o.telefon}</p>
       <p><strong>Status Keahlian:</strong> 
         <span style="color: ${o.status.toLowerCase() === 'aktif' ? 'green' : 'red'}">${o.status}</span>
       </p>
-      <p><a href="${o.pautan}" target="_blank">🔗 Maklumat Lanjut</a></p>
+      <a href="#" onclick="expandSingleInfo('${key}', ${index})">Maklumat Lanjut</a>
       <hr>
     </div>
   `).join("");
@@ -320,18 +384,45 @@ function showInfo(key) {
     <h3>🏠 ${owners[0].unit}, ${owners[0].jalan}</h3>
     ${html}
   `;
-  document.getElementById('info-box').style.display = 'block';
+  document.getElementById('info-box').classList.add("show");
 }
 
+function expandSingleInfo(key, index) {
+  const owner = markersData[key][index];
+  if (!owner) return;
+
+  const fullHtml = `
+    <div style="margin-bottom: 10px;">
+      <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+      ${Object.keys(owner).map(field => {
+        let value = owner[field] || 'Tidak ada';
+        if (field.toLowerCase() === 'status') {
+          const color = value.toLowerCase() === 'aktif' ? 'green' : 'red';
+          value = `<span style="color: ${color}">${value}</span>`;
+        }
+        return `<p><strong>${field.charAt(0).toUpperCase() + field.slice(1)}:</strong> ${value}</p>`;
+      }).join('')}
+      <hr>
+    </div>
+  `;
+
+  document.getElementById('info-text').innerHTML = fullHtml;
+}
+
+
+
 function hideInfo() {
-  document.getElementById('info-box').style.display = 'none';
+  const box = document.getElementById("info-box");
+  box.classList.remove("show");
+  document.getElementById("searchInput").value = "";
+  document.getElementById("searchField").selectedIndex = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function loadMarkers() {
-    
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown";
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown"; 
 
-    try {
+  try {
     const response = await fetch(SHEET_URL);
     const text = await response.text();
     const json = JSON.parse(text.substring(47).slice(0, -2));
@@ -347,7 +438,7 @@ async function loadMarkers() {
       const telefon = row.c[3]?.v || "";
       const status = row.c[4]?.v || "";
       const pautan = row.c[5]?.v || "#";
-      const coords = row.c[6]?.v || ""; // "coords="676,282""
+      const coords = row.c[6]?.v || "";
 
       const match = coords.match(/coords="(\d+),(\d+)"/);
       if (!match) return;
@@ -359,14 +450,11 @@ async function loadMarkers() {
 
       const key = `${unit}|${jalan}`;
       if (!markersData[key]) markersData[key] = [];
-
       markersData[key].push({ unit, jalan, nama, telefon, status, pautan });
 
-      // Tambah ke dropdown sets
       unitSet.add(unit);
       jalanSet.add(jalan);
 
-      // Create marker hanya sekali per lokasi
       if (markersData[key].length === 1) {
         const isAktif = status.trim().toLowerCase() === "aktif";
         const statusClass = isAktif ? "aktif" : "tidak-aktif";
@@ -382,9 +470,7 @@ async function loadMarkers() {
       }
     });
 
-    // Isi dropdown selepas data dimuat
     fillDropdowns(unitSet, jalanSet);
-
   } catch (error) {
     console.error("Ralat memuat data:", error);
   }
@@ -418,20 +504,105 @@ function searchBySelection() {
     showInfo(key);
   } else {
     document.getElementById("info-text").innerHTML = `
-      <h3>Maklumat tidak dijumpai</h3>
+      <p class="alert-text">❗ Maklumat tidak dijumpai</p>
       <p>Sila pastikan Unit dan Jalan dipilih dengan betul.</p>
     `;
-    document.getElementById("info-box").style.display = 'block';
+    document.getElementById("info-box").classList.add("show");
   }
 }
 
+window.onload = () => {
+  loadMarkers();
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
+};
 
-    
+function searchData() {
+  const field = document.getElementById("searchField").value.toLowerCase();
+  const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
 
-    window.onload = () => {
-      loadMarkers();
-      document.getElementById("currentYear").textContent = new Date().getFullYear();
-    };
+  if (!keyword) {
+    alert("Sila masukkan kata kunci carian.");
+    return;
+  }
+
+  const results = [];
+  for (const key in markersData) {
+    const owners = markersData[key];
+    for (const owner of owners) {
+      if (owner[field]) {
+        const ownerValue = owner[field].toLowerCase();
+        const isExactMatchField = ['unit', 'jalan', 'telefon'].includes(field);
+        const isMatch = isExactMatchField ? (ownerValue === keyword) : ownerValue.includes(keyword);
+
+        if (isMatch) {
+          results.push(owner);
+        }
+      }
+    }
+  }
+
+  if (results.length > 0) {
+    let resultsHtml = results.map((owner, idx) => `
+      <div style="margin-bottom: 10px;">
+        <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+        <p><strong>Nama:</strong> ${owner.nama}</p>
+        <p><strong>No. Telefon:</strong> ${owner.telefon}</p>
+        <p><strong>Status Keahlian:</strong> 
+          <span style="color: ${owner.status.toLowerCase() === 'aktif' ? 'green' : 'red'}">${owner.status}</span>
+        </p>
+        <a href="#" onclick="expandSearchResult(${idx})">Maklumat Lanjut</a>
+        <hr>
+      </div>
+    `).join("");
+
+    document.getElementById('info-text').innerHTML = `
+      <h3>Hasil Carian: "${keyword}"</h3>
+      ${resultsHtml}
+    `;
+    document.getElementById("info-box").classList.add("show");
+
+    window.expandSearchResult = function(index) {
+  const owner = results[index];
+  const fullHtml = `
+    <div style="margin-bottom: 10px;">
+      <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+      ${Object.keys(owner).map(field => {
+        let value = owner[field] || 'Tidak ada';
+        if (field.toLowerCase() === 'status') {
+          const color = value.toLowerCase() === 'aktif' ? 'green' : 'red';
+          value = `<span style="color: ${color}">${value}</span>`;
+
+
+        }
+        return `<p><strong>${field.charAt(0).toUpperCase() + field.slice(1)}:</strong> ${value}</p>`;
+      }).join('')}
+      <hr>
+    </div>
+  `;
+  document.getElementById("info-text").innerHTML = fullHtml;
+}
+  } else {
+    document.getElementById("info-text").innerHTML = `
+      <p class="alert-text">❗ Tiada maklumat ditemui untuk "<strong>${keyword}</strong>" dalam medan <strong>${field.toUpperCase()}</strong></p>
+    `;
+    document.getElementById("info-box").classList.add("show");
+  }
+
+  setTimeout(() => {
+    document.getElementById("info-box").scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+
+
+console.log("Headers dari Sheet:", headers);
+
+
+</script>
+
+
+
+
   </script>
 </body>
 </html>
