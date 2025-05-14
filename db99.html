@@ -187,7 +187,7 @@
 
         rows.forEach(row => {
           const statusRaw = (row[idx.status] || "").toLowerCase();
-          const status = statusRaw.includes("aktif") ? "Ahli" : "Bukan Ahli";
+            const status = statusRaw === "Aktif" ? "Ahli" : "Bukan Ahli";
 
           const record = {
             unit: row[idx.unit],
