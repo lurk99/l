@@ -12,319 +12,109 @@
       background: #f0f2f5;
     }
 
-    .banner {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: #002B5B;
-      color: white;
-      padding: 15px 30px;
-      font-size: 20px;
-      font-weight: bold;
+    .login-page {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      z-index: 1000;
+      height: 100vh;
+      background: linear-gradient(to right, #004AAD, #0076D1);
     }
 
-    .banner nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-size: 16px;
-    }
-
-    .container {
-      padding: 100px 30px 40px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      flex: 1 1 180px;
-      background: linear-gradient(to bottom right, #004AAD, #0076D1);
-      color: white;
-      padding: 20px;
+    .login-box {
+      background: white;
+      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       text-align: center;
+      width: 300px;
     }
 
-    .chart-container {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    .filters {
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 12px;
+    .login-box h2 {
       margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
     }
 
-    .filters select,
-    .filters input {
-      padding: 8px 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    table {
+    .login-box input {
       width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
 
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    th {
-      background: #f7f9fc;
-      text-align: left;
+    .login-box button {
+      padding: 10px 20px;
+      border: none;
+      background: #004AAD;
+      color: white;
+      border-radius: 8px;
       cursor: pointer;
     }
 
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-
-    @media (max-width: 768px) {
-      .stats {
-        flex-direction: column;
-      }
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
-  <div class="banner">
-    <div><i class="fa-solid fa-house"></i> Dashboard Pemilik Rumah SERENIA ARIYA</div>
-    <nav>
-      <a href="#pieChart">Pie</a>
-      <a href="#barChart">Bar</a>
-      <a href="#filters">Filter</a>
-      <a href="#table">Senarai</a>
-      <a href="#about">About</a>
-    </nav>
+  <div id="loginPage" class="login-page">
+    <div class="login-box">
+      <h2>Log Masuk</h2>
+      <input type="text" id="username" placeholder="Nama pengguna" />
+      <input type="password" id="password" placeholder="Katalaluan" />
+      <button onclick="login()">Masuk</button>
+    </div>
   </div>
 
-  <div class="container">
-    <div class="stats" id="stats"></div>
-
-    <div class="chart-container" id="pieChartContainer">
-      <canvas id="pieChart" height="100"></canvas>
-    </div>
-
-    <div class="chart-container" id="barChartContainer">
-      <canvas id="barChart"></canvas>
-    </div>
-
-    <div class="filters" id="filters">
-      <select id="filterJalan"><option value="">Semua Jalan</option></select>
-      <select id="filterStatus"><option value="">Semua Status</option></select>
-      <input type="text" id="searchNama" placeholder="Cari nama..." />
-    </div>
-
-    <table id="table">
-      <thead>
-        <tr>
-          <th onclick="sortTable(0)">Unit</th>
-          <th onclick="sortTable(1)">Jalan</th>
-          <th onclick="sortTable(2)">Nama</th>
-          <th onclick="sortTable(3)">Telefon</th>
-          <th onclick="sortTable(4)">Status Ahli</th>
-          <th>Pautan</th>
-          <th>Lokasi</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-
-    <div id="about" style="margin-top: 50px; text-align:center; color: #888; font-size: 14px;">
-      <p>Developer <strong>Lurk Computer Inc.</strong> &copy; 2025</p>
-    </div>
+  <div id="dashboardPage" class="hidden">
+    <h1 style="text-align:center; padding: 20px;">Dashboard Pemilik Rumah</h1>
+    <div id="content" style="padding: 20px;"></div>
   </div>
 
   <script>
-    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec";
-    let tableData = [];
+    function login() {
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value.trim();
+      const validUsers = [
+        { user: "admin", pass: "1234" },
+        { user: "test", pass: "abcd" }
+      ];
+      const isValid = validUsers.some(acc => acc.user === u && acc.pass === p);
 
-    fetch(apiURL)
-      .then(res => res.json())
-      .then(data => {
-        const headers = data[0];
-        const rows = data.slice(1);
-
-        const idx = {
-          unit: headers.indexOf("UNIT"),
-          jalan: headers.indexOf("JALAN"),
-          nama: headers.indexOf("NAMA"),
-          telefon: headers.indexOf("TELEFON"),
-          status: headers.indexOf("STATUS AHLI"),
-          pautan: headers.indexOf("PAUTAN"),
-          coord: headers.indexOf("CO"),
-          email: headers.indexOf("EMAIL")
-        };
-
-        const statsDiv = document.getElementById("stats");
-        const jalanSet = new Set();
-        const statusCount = {"Ahli": 0, "Bukan Ahli": 0};
-        const jalanCount = {};
-        const unitSet = new Set();
-        const ownerList = [];
-
-        rows.forEach(row => {
-          const statusRaw = (row[idx.status] || "").trim().toLowerCase();
-          const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
-
-          const unit = row[idx.unit]?.trim();
-          const jalan = row[idx.jalan]?.trim();
-          const unitKey = `${unit}|||${jalan}`;
-          unitSet.add(unitKey);
-
-          const record = {
-            unit: unit,
-            jalan: jalan,
-            nama: row[idx.nama],
-            telefon: row[idx.telefon],
-            status: status,
-            pautan: row[idx.pautan],
-            coords: row[idx.coords],
-            email: row[idx.email]
-          };
-
-          ownerList.push(record);
-          jalanSet.add(jalan);
-          statusCount[status]++;
-          jalanCount[jalan] = (jalanCount[jalan] || 0) + 1;
-        });
-
-        tableData = ownerList;
-
-        document.getElementById("filterJalan").innerHTML += [...jalanSet].sort().map(j => `<option value="${j}">${j}</option>`).join('');
-        ["Ahli", "Bukan Ahli"].forEach(s => {
-          document.getElementById("filterStatus").innerHTML += `<option value="${s}">${s}</option>`;
-        });
-
-        const statsHTML = `
-          <div class="card"><i class="fa-solid fa-users"></i><br>Jumlah Pemilik<br><b>${ownerList.length}</b></div>
-          <div class="card"><i class="fa-solid fa-house"></i><br>Jumlah Pintu Rumah<br><b>${unitSet.size}</b></div>
-          <div class="card"><i class="fa-solid fa-road"></i><br>Jumlah Jalan<br><b>${jalanSet.size}</b></div>
-          <div class="card"><i class="fa-solid fa-user-check"></i><br>Ahli<br><b>${statusCount["Ahli"]}</b></div>
-          <div class="card"><i class="fa-solid fa-user-xmark"></i><br>Bukan Ahli<br><b>${statusCount["Bukan Ahli"]}</b></div>`;
-        statsDiv.innerHTML = statsHTML;
-
-        new Chart(document.getElementById("pieChart"), {
-          type: "pie",
-          data: {
-            labels: Object.keys(statusCount),
-            datasets: [{
-              data: Object.values(statusCount),
-              backgroundColor: ["#2E8B57", "#B0BEC5"]
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { position: 'bottom' } }
-          }
-        });
-
-        new Chart(document.getElementById("barChart"), {
-          type: "bar",
-          data: {
-            labels: Object.keys(jalanCount),
-            datasets: [{
-              label: "Unit per Jalan",
-              data: Object.values(jalanCount),
-              backgroundColor: "#2196F3"
-            }]
-          }
-        });
-
-        ["filterJalan", "filterStatus", "searchNama"].forEach(id => {
-          document.getElementById(id).addEventListener("change", renderTable);
-          document.getElementById(id).addEventListener("input", renderTable);
-        });
-
-        renderTable();
-      });
-
-    function renderTable() {
-      const jalan = document.getElementById("filterJalan").value;
-      const status = document.getElementById("filterStatus").value;
-      const search = document.getElementById("searchNama").value.toLowerCase();
-      const tbody = document.getElementById("tableBody");
-
-      const filtered = tableData.filter(r =>
-        (!jalan || r.jalan === jalan) &&
-        (!status || r.status === status) &&
-        (!search || r.nama.toLowerCase().includes(search))
-      );
-
-      localStorage.setItem("filterJalan", jalan);
-      localStorage.setItem("filterStatus", status);
-      localStorage.setItem("searchNama", search);
-
-      tbody.innerHTML = filtered.map(r => `
-        <tr>
-          <td>${r.unit}</td><td>${r.jalan}</td><td>${r.nama}</td><td>${r.telefon}</td>
-          <td>${r.status === "Ahli" ? "<i class='fa fa-check-circle' style='color:green'></i> Ahli" : "<i class='fa fa-times-circle' style='color:red'></i> Bukan Ahli"}</td>
-          <td><a href="${r.pautan}" target="_blank"><i class="fa fa-link"></i></a></td>
-                    <td><a href="${r.coords}" target="_blank"><i class="fa fa-link"></i></a></td>
-
-          <td>${r.email}</td>
-        </tr>
-      `).join('');
+      if (isValid) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboardPage").classList.remove("hidden");
+        initDashboard();
+      } else {
+        alert("Nama pengguna atau katalaluan salah.");
+      }
     }
 
-    function sortTable(n) {
-      const table = document.getElementById("table");
-      let switching = true, dir = "asc", switchcount = 0;
-      while (switching) {
-        switching = false;
-        const rows = table.rows;
-        for (let i = 1; i < rows.length - 1; i++) {
-          let shouldSwitch = false;
-          const x = rows[i].getElementsByTagName("TD")[n];
-          const y = rows[i + 1].getElementsByTagName("TD")[n];
-          if ((dir === "asc" && x.innerText.toLowerCase() > y.innerText.toLowerCase()) ||
-              (dir === "desc" && x.innerText.toLowerCase() < y.innerText.toLowerCase())) {
-            shouldSwitch = true;
-            break;
-          }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else {
-          if (switchcount === 0 && dir === "asc") {
-            dir = "desc";
-            switching = true;
-          }
-        }
-      }
+    function initDashboard() {
+      const content = document.getElementById("content");
+      const apiURL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+      fetch(apiURL)
+        .then(res => res.json())
+        .then(data => {
+          let html = '<table border="1" cellpadding="8" cellspacing="0" style="width:100%; background:white; border-collapse: collapse;">';
+          html += '<thead><tr><th>UNIT</th><th>JALAN</th><th>NAMA</th><th>TELEFON</th><th>STATUS AHLI</th><th>PAUTAN</th><th>COORDS</th><th>EMAIL</th></tr></thead><tbody>';
+
+          data.forEach(row => {
+            html += '<tr>' +
+              `<td>${row.UNIT || ''}</td>` +
+              `<td>${row.JALAN || ''}</td>` +
+              `<td>${row.NAMA || ''}</td>` +
+              `<td>${row.TELEFON || ''}</td>` +
+              `<td>${row["STATUS AHLI"] === "Aktif" ? '✓ Ahli' : '✗ Bukan Ahli'}</td>` +
+              `<td><a href="${row.PAUTAN}" target="_blank">Pautan</a></td>` +
+              `<td><a href="${row.COORDS}" target="_blank">📍</a></td>` +
+              `<td>${row.EMAIL || ''}</td>` +
+              '</tr>';
+          });
+
+          html += '</tbody></table>';
+          content.innerHTML = html;
+        })
+        .catch(err => {
+          content.innerHTML = `<p style='color:red;'>Gagal ambil data: ${err}</p>`;
+        });
     }
   </script>
 </body>
