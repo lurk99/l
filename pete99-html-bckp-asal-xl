@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LurkMap ARIYA</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 80px; /* ruang untuk banner */
+      background: #f9f9f9;
+      text-align: center;
+    }
+
+   /* Banner */
+.banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #1abc9c, #16a085);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 999;
+}
+
+
+
+    
+
+body {
+  margin: 0;
+  padding-top: 70px; /* ruang untuk banner */
+  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+    
+.banner-left img.logo-kiri {
+  display: flex;
+  align-items: center;
+}
+
+.banner img {
+  height: 40px;
+  width: 40px;
+  margin-right: 20px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  border: 2px solid white;
+}
+
+.banner-title {
+  font-size: 8px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  text-align: center;
+  flex-grow: 1;
+}
+
+
+
+
+
+.banner-center h3 {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+
+    
+
+.banner-right img.logo-kanan {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.banner-right img.logo-kanan:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+
+    
+
+    .map-container {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+.map-inner {
+  width: 100%;
+  padding-top: 66.66%; /* untuk ratio 3:2 */
+  position: relative;
+}
+
+.map-inner img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+    .marker {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+      border: 0.5px solid white;
+    }
+
+    .marker.aktif {
+      background-color: red;
+    }
+
+    .marker.tidak-aktif {
+      background-color: gray;
+    }
+
+#info-box {
+  margin: 20px auto;
+  max-width: 400px;
+  background: #ffffff;
+  border: 2px solid #4CAF50;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+#info-box.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+    #info-box h3 {
+      margin-top: 0;
+      color: #2c3e50;
+    }
+
+    #info-box p span {
+      font-weight: bold;
+    }
+
+    #info-box .aktif {
+      color: green;
+    }
+
+    #info-box .tidak-aktif {
+      color: red;
+    }
+
+    #info-box a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    #info-box a:hover {
+      text-decoration: underline;
+    }
+
+    button {
+  padding: 8px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+    }
+
+
+.button:hover {
+  background-color: #c0392b;
+}
+
+
+
+
+
+    
+    .footer {
+      margin-top: 40px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.85);
+      text-shadow: 1px 1px 1.5px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+      animation: fadeIn 5s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+
+
+
+
+
+.selection-wrapper {
+  margin: 30px auto 10px;
+  text-align: center;
+}
+
+.selection-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.selection-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.selection-box select,
+.selection-box button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  min-width: 150px;
+  box-sizing: border-box;
+}
+
+.selection-box button {
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.selection-box button:hover {
+  background-color: #16a085;
+}
+
+
+
+.alert-text {
+  color: #d32f2f;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+
+.dropdown {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+
+
+    
+  </style>
+</head>
+<body>
+
+<!-- Banner -->
+<div class="banner">
+  <!-- Logo kiri -->
+  <div class="banner-left">
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" class="logo-kiri" />
+  </div>
+
+  <!-- Tajuk tengah -->
+  <div class="banner-center">
+    <h3>Lurkv11.7 Maklumat Pemilik Rumah ARIYA</h3>
+  </div>
+
+  <!-- Logo kanan sebagai pautan -->
+  <div class="banner-right">
+    <a href="https://lurk99.github.io/l/" target="_blank">
+      <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
+    </a>
+  </div>
+</div>
+
+
+
+<!-- combobox -->
+<div style="margin: 20px auto; max-width: 400px; text-align: center;">
+  <h3 style="margin-bottom: 10px;">🔍 Carian Pemilik</h3>
+  <select id="searchField" class="dropdown">
+    <option value="unit">Unit</option>
+    <option value="jalan">Jalan</option>
+    <option value="nama">Nama</option>
+    <option value="telefon">Telefon</option>
+    <option value="status">Status Ahli</option>
+  </select>
+  <input type="text" id="searchInput" placeholder="Masukkan carian..." class="dropdown" style="width: 60%; margin-top: 10px;" />
+  <button onclick="searchData()" class="button" style="margin-top: 10px;">Cari</button>
+</div>
+
+
+
+  
+  <!-- Peta -->
+  <div class="map-container">
+    <div class="map-inner">
+      <img src="https://raw.githubusercontent.com/lurk99/img/main/map-ariya.PNG" alt="lurkARIYAmap" />
+    </div>
+  </div>
+
+  <!-- Info Box -->
+  <div id="info-box">
+    <div id="info-text"></div>
+    <button class="button" onclick="hideInfo()">Tutup</button>
+  </div>
+
+
+
+
+
+
+
+
+
+  <!-- Footer -->
+  <div class="footer">
+    &copy; <span id="currentYear"></span> Developer: Lurk
+  </div>
+
+
+   
+
+<script>
+
+const IMAGE_WIDTH = 1148;
+const IMAGE_HEIGHT = 804;
+const markersData = {}; // Untuk kumpul semua pemilik ikut lokasi
+
+function showInfo(key) {
+  const owners = markersData[key];
+  if (!owners || owners.length === 0) return;
+
+  const html = owners.map((o, index) => `
+    <div style="margin-bottom: 10px;">
+      <p><strong>Nama:</strong> ${o.nama}</p>
+      <p><strong>No. Telefon:</strong> ${o.telefon}</p>
+      <p><strong>Status Keahlian:</strong> 
+        <span style="color: ${o.status.toLowerCase() === 'aktif' ? 'green' : 'red'}">${o.status}</span>
+      </p>
+      <a href="#" onclick="expandSingleInfo('${key}', ${index})">Maklumat Lanjut</a>
+      <hr>
+    </div>
+  `).join("");
+
+  document.getElementById('info-text').innerHTML = `
+    <h3>🏠 ${owners[0].unit}, ${owners[0].jalan}</h3>
+    ${html}
+  `;
+  document.getElementById('info-box').classList.add("show");
+}
+
+function expandSingleInfo(key, index) {
+  const owner = markersData[key][index];
+  if (!owner) return;
+
+  const fullHtml = `
+    <div style="margin-bottom: 10px;">
+      <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+      ${Object.keys(owner).map(field => {
+        let value = owner[field] || 'Tidak ada';
+        if (field.toLowerCase() === 'status') {
+          const color = value.toLowerCase() === 'aktif' ? 'green' : 'red';
+          value = `<span style="color: ${color}">${value}</span>`;
+        }
+        return `<p><strong>${field.charAt(0).toUpperCase() + field.slice(1)}:</strong> ${value}</p>`;
+      }).join('')}
+      <hr>
+    </div>
+  `;
+
+  document.getElementById('info-text').innerHTML = fullHtml;
+}
+
+
+
+function hideInfo() {
+  const box = document.getElementById("info-box");
+  box.classList.remove("show");
+  document.getElementById("searchInput").value = "";
+  document.getElementById("searchField").selectedIndex = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function loadMarkers() {
+  const SHEET_URL = "https://docs.google.com/spreadsheets/d/12WXa3Y3ICFwLPqOQJ6NGDjD1Pwjmiy-l10pkx6Xni7Q/gviz/tq?tqx=out:json&sheet=infown"; 
+
+  try {
+    const response = await fetch(SHEET_URL);
+    const text = await response.text();
+    const json = JSON.parse(text.substring(47).slice(0, -2));
+    const rows = json.table.rows;
+
+    const unitSet = new Set();
+    const jalanSet = new Set();
+
+    rows.forEach(row => {
+      const unit = row.c[0]?.v || "";
+      const jalan = row.c[1]?.v || "";
+      const nama = row.c[2]?.v || "";
+      const telefon = row.c[3]?.v || "";
+      const status = row.c[4]?.v || "";
+      const pautan = row.c[5]?.v || "#";
+      const coords = row.c[6]?.v || "";
+
+      const match = coords.match(/coords="(\d+),(\d+)"/);
+      if (!match) return;
+
+      const x = parseInt(match[1], 10);
+      const y = parseInt(match[2], 10);
+      const left = (x / IMAGE_WIDTH) * 100;
+      const top = (y / IMAGE_HEIGHT) * 100;
+
+      const key = `${unit}|${jalan}`;
+      if (!markersData[key]) markersData[key] = [];
+      markersData[key].push({ unit, jalan, nama, telefon, status, pautan });
+
+      unitSet.add(unit);
+      jalanSet.add(jalan);
+
+      if (markersData[key].length === 1) {
+        const isAktif = status.trim().toLowerCase() === "aktif";
+        const statusClass = isAktif ? "aktif" : "tidak-aktif";
+
+        const marker = document.createElement("div");
+        marker.className = `marker ${statusClass}`;
+        marker.style.left = `${left}%`;
+        marker.style.top = `${top}%`;
+        marker.style.position = "absolute";
+        marker.onclick = () => showInfo(key);
+
+        document.querySelector(".map-inner").appendChild(marker);
+      }
+    });
+
+    fillDropdowns(unitSet, jalanSet);
+  } catch (error) {
+    console.error("Ralat memuat data:", error);
+  }
+}
+
+function fillDropdowns(unitSet, jalanSet) {
+  const unitSelect = document.getElementById("unitSelect");
+  const jalanSelect = document.getElementById("jalanSelect");
+
+  [...unitSet].sort().forEach(unit => {
+    const option = document.createElement("option");
+    option.value = unit;
+    option.textContent = unit;
+    unitSelect.appendChild(option);
+  });
+
+  [...jalanSet].sort().forEach(jalan => {
+    const option = document.createElement("option");
+    option.value = jalan;
+    option.textContent = jalan;
+    jalanSelect.appendChild(option);
+  });
+}
+
+function searchBySelection() {
+  const unit = document.getElementById("unitSelect").value;
+  const jalan = document.getElementById("jalanSelect").value;
+
+  const key = `${unit}|${jalan}`;
+  if (markersData[key]) {
+    showInfo(key);
+  } else {
+    document.getElementById("info-text").innerHTML = `
+      <p class="alert-text">❗ Maklumat tidak dijumpai</p>
+      <p>Sila pastikan Unit dan Jalan dipilih dengan betul.</p>
+    `;
+    document.getElementById("info-box").classList.add("show");
+  }
+}
+
+window.onload = () => {
+  loadMarkers();
+  document.getElementById("currentYear").textContent = new Date().getFullYear();
+};
+
+function searchData() {
+  const field = document.getElementById("searchField").value.toLowerCase();
+  const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+
+  if (!keyword) {
+    alert("Sila masukkan kata kunci carian.");
+    return;
+  }
+
+  const results = [];
+  for (const key in markersData) {
+    const owners = markersData[key];
+    for (const owner of owners) {
+      if (owner[field]) {
+        const ownerValue = owner[field].toLowerCase();
+        const isExactMatchField = ['unit', 'jalan', 'telefon'].includes(field);
+        const isMatch = isExactMatchField ? (ownerValue === keyword) : ownerValue.includes(keyword);
+
+        if (isMatch) {
+          results.push(owner);
+        }
+      }
+    }
+  }
+
+  if (results.length > 0) {
+    let resultsHtml = results.map((owner, idx) => `
+      <div style="margin-bottom: 10px;">
+        <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+        <p><strong>Nama:</strong> ${owner.nama}</p>
+        <p><strong>No. Telefon:</strong> ${owner.telefon}</p>
+        <p><strong>Status Keahlian:</strong> 
+          <span style="color: ${owner.status.toLowerCase() === 'aktif' ? 'green' : 'red'}">${owner.status}</span>
+        </p>
+        <a href="#" onclick="expandSearchResult(${idx})">Maklumat Lanjut</a>
+        <hr>
+      </div>
+    `).join("");
+
+    document.getElementById('info-text').innerHTML = `
+      <h3>Hasil Carian: "${keyword}"</h3>
+      ${resultsHtml}
+    `;
+    document.getElementById("info-box").classList.add("show");
+
+    window.expandSearchResult = function(index) {
+  const owner = results[index];
+  const fullHtml = `
+    <div style="margin-bottom: 10px;">
+      <h3>🏠 ${owner.unit}, ${owner.jalan}</h3>
+      ${Object.keys(owner).map(field => {
+        let value = owner[field] || 'Tidak ada';
+        if (field.toLowerCase() === 'status') {
+          const color = value.toLowerCase() === 'aktif' ? 'green' : 'red';
+          value = `<span style="color: ${color}">${value}</span>`;
+
+
+        }
+        return `<p><strong>${field.charAt(0).toUpperCase() + field.slice(1)}:</strong> ${value}</p>`;
+      }).join('')}
+      <hr>
+    </div>
+  `;
+  document.getElementById("info-text").innerHTML = fullHtml;
+}
+  } else {
+    document.getElementById("info-text").innerHTML = `
+      <p class="alert-text">❗ Tiada maklumat ditemui untuk "<strong>${keyword}</strong>" dalam medan <strong>${field.toUpperCase()}</strong></p>
+    `;
+    document.getElementById("info-box").classList.add("show");
+  }
+
+  setTimeout(() => {
+    document.getElementById("info-box").scrollIntoView({ behavior: 'smooth' });
+  }, 100);
+}
+
+
+
+console.log("Headers dari Sheet:", headers);
+
+
+</script>
+
+
+
+
+  </script>
+</body>
+</html>
