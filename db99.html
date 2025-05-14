@@ -56,11 +56,11 @@
         const headers = data[0];
         const rows = data.slice(1);
         const idx = {
-          unit: headers.indexOf("Unit"),
-          jalan: headers.indexOf("Jalan"),
-          nama: headers.indexOf("Nama Pemilik"),
-          status: headers.indexOf("Status Ahli"),
-          tarikh: headers.indexOf("Tarikh Daftar")
+          unit: headers.indexOf("UNIT"),
+          jalan: headers.indexOf("JALAN"),
+          nama: headers.indexOf("NAMA"),
+          status: headers.indexOf("STATUS AHLI"),
+          tarikh: headers.indexOf("TELEFON")
         };
 
         const statsDiv = document.getElementById("stats");
