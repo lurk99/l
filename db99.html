@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Lurk Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f7f7f7; }
+    h1 { margin-bottom: 20px; }
+    .card { display: inline-block; margin: 10px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 8px; min-width: 150px; }
+    .flex { display: flex; flex-wrap: wrap; gap: 20px; }
+    .chart-container { width: 100%; max-width: 600px; margin: 30px 0; background: white; padding: 20px; border-radius: 10px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; background: white; }
+    th, td { padding: 8px 12px; border: 1px solid #ddd; }
+    th { background: #f0f0f0; }
+    select, input { padding: 5px; margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard Pemilik Rumah ARIYA</h1>
+
+  <div class="flex" id="stats"></div>
+
+  <div class="chart-container">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="lineChart"></canvas>
+  </div>
+
+  <div>
+    <h3>Penapis:</h3>
+    <select id="filterJalan"><option value="">Semua Jalan</option></select>
+    <select id="filterStatus"><option value="">Semua Status</option></select>
+    <input type="text" id="searchName" placeholder="Cari nama..." />
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Nama</th><th>Unit</th><th>Jalan</th><th>Status</th><th>Tarikh</th></tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec"; // <-- Ganti dgn URL web app anda
+
+    fetch(apiURL)
+      .then(res => res.json())
+      .then(data => {
+        const headers = data[0];
+        const rows = data.slice(1);
+        const idx = {
+          unit: headers.indexOf("Unit"),
+          jalan: headers.indexOf("Jalan"),
+          nama: headers.indexOf("Nama Pemilik"),
+          status: headers.indexOf("Status Ahli"),
+          tarikh: headers.indexOf("Tarikh Daftar")
+        };
+
+        const statsDiv = document.getElementById("stats");
+        const jalanSet = new Set();
+        const statusCount = {};
+        const daftarByMonth = {};
+        const jalanCount = {};
+        const ownerList = [];
+
+        rows.forEach(row => {
+          const nama = row[idx.nama];
+          const unit = row[idx.unit];
+          const jalan = row[idx.jalan];
+          const status = row[idx.status];
+          const tarikh = row[idx.tarikh];
+
+          jalanSet.add(jalan);
+          statusCount[status] = (statusCount[status] || 0) + 1;
+          jalanCount[jalan] = (jalanCount[jalan] || 0) + 1;
+
+          // format tarikh jadi bulan
+          const d = new Date(tarikh);
+          const bulan = d.toLocaleDateString("ms-MY", { year: 'numeric', month: 'short' });
+          daftarByMonth[bulan] = (daftarByMonth[bulan] || 0) + 1;
+
+          ownerList.push({ nama, unit, jalan, status, tarikh });
+        });
+
+        // Statistik ringkas
+        statsDiv.innerHTML = `
+          <div class="card">Jumlah Pemilik<br><b>${ownerList.length}</b></div>
+          <div class="card">Jumlah Jalan<br><b>${jalanSet.size}</b></div>
+          <div class="card">Ahli<br><b>${statusCount["Ahli"] || 0}</b></div>
+          <div class="card">Bukan Ahli<br><b>${statusCount["Bukan Ahli"] || 0}</b></div>
+        `;
+
+        // Pie Chart
+        new Chart(document.getElementById("pieChart"), {
+          type: "pie",
+          data: {
+            labels: Object.keys(statusCount),
+            datasets: [{
+              data: Object.values(statusCount),
+              backgroundColor: ["green", "gray"]
+            }]
+          }
+        });
+
+        // Bar Chart
+        const sortedJalan = Object.entries(jalanCount).sort((a,b) => b[1]-a[1]);
+        new Chart(document.getElementById("barChart"), {
+          type: "bar",
+          data: {
+            labels: sortedJalan.map(x => x[0]),
+            datasets: [{
+              label: "Jumlah Unit",
+              data: sortedJalan.map(x => x[1]),
+              backgroundColor: "steelblue"
+            }]
+          }
+        });
+
+        // Line Chart
+        const sortedBulan = Object.entries(daftarByMonth).sort((a,b) => new Date(a[0]) - new Date(b[0]));
+        new Chart(document.getElementById("lineChart"), {
+          type: "line",
+          data: {
+            labels: sortedBulan.map(x => x[0]),
+            datasets: [{
+              label: "Pendaftaran Bulanan",
+              data: sortedBulan.map(x => x[1]),
+              borderColor: "blue",
+              fill: false,
+              tension: 0.3
+            }]
+          }
+        });
+
+        // Dropdown filter jalan dan status
+        const jalanSelect = document.getElementById("filterJalan");
+        const statusSelect = document.getElementById("filterStatus");
+        [...jalanSet].sort().forEach(jln => {
+          const opt = document.createElement("option");
+          opt.value = opt.textContent = jln;
+          jalanSelect.appendChild(opt);
+        });
+        Object.keys(statusCount).forEach(sts => {
+          const opt = document.createElement("option");
+          opt.value = opt.textContent = sts;
+          statusSelect.appendChild(opt);
+        });
+
+        function renderTable() {
+          const jalanVal = jalanSelect.value;
+          const statusVal = statusSelect.value;
+          const searchVal = document.getElementById("searchName").value.toLowerCase();
+          const tbody = document.getElementById("tableBody");
+
+          const filtered = ownerList.filter(r => {
+            return (!jalanVal || r.jalan === jalanVal) &&
+                   (!statusVal || r.status === statusVal) &&
+                   (!searchVal || r.nama.toLowerCase().includes(searchVal));
+          });
+
+          tbody.innerHTML = filtered.map(r => `
+            <tr>
+              <td>${r.nama}</td><td>${r.unit}</td><td>${r.jalan}</td><td>${r.status}</td><td>${r.tarikh}</td>
+            </tr>
+          `).join('');
+        }
+
+        jalanSelect.onchange = renderTable;
+        statusSelect.onchange = renderTable;
+        document.getElementById("searchName").oninput = renderTable;
+
+        renderTable();
+      });
+  </script>
+</body>
+</html>
