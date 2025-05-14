@@ -183,7 +183,7 @@
           telefon: headers.indexOf("TELEFON"),
           status: headers.indexOf("STATUS AHLI"),
           pautan: headers.indexOf("PAUTAN"),
-          coords: headers.indexOf("COORDSXXX"),
+          coord: headers.indexOf("CO"),
           email: headers.indexOf("EMAIL")
         };
 
@@ -191,15 +191,21 @@
         const jalanSet = new Set();
         const statusCount = {"Ahli": 0, "Bukan Ahli": 0};
         const jalanCount = {};
+        const unitSet = new Set();
         const ownerList = [];
 
         rows.forEach(row => {
           const statusRaw = (row[idx.status] || "").trim().toLowerCase();
           const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
 
+          const unit = row[idx.unit]?.trim();
+          const jalan = row[idx.jalan]?.trim();
+          const unitKey = `${unit}|||${jalan}`;
+          unitSet.add(unitKey);
+
           const record = {
-            unit: row[idx.unit],
-            jalan: row[idx.jalan],
+            unit: unit,
+            jalan: jalan,
             nama: row[idx.nama],
             telefon: row[idx.telefon],
             status: status,
@@ -209,9 +215,9 @@
           };
 
           ownerList.push(record);
-          jalanSet.add(record.jalan);
+          jalanSet.add(jalan);
           statusCount[status]++;
-          jalanCount[record.jalan] = (jalanCount[record.jalan] || 0) + 1;
+          jalanCount[jalan] = (jalanCount[jalan] || 0) + 1;
         });
 
         tableData = ownerList;
@@ -223,6 +229,7 @@
 
         const statsHTML = `
           <div class="card"><i class="fa-solid fa-users"></i><br>Jumlah Pemilik<br><b>${ownerList.length}</b></div>
+          <div class="card"><i class="fa-solid fa-house"></i><br>Jumlah Pintu Rumah<br><b>${unitSet.size}</b></div>
           <div class="card"><i class="fa-solid fa-road"></i><br>Jumlah Jalan<br><b>${jalanSet.size}</b></div>
           <div class="card"><i class="fa-solid fa-user-check"></i><br>Ahli<br><b>${statusCount["Ahli"]}</b></div>
           <div class="card"><i class="fa-solid fa-user-xmark"></i><br>Bukan Ahli<br><b>${statusCount["Bukan Ahli"]}</b></div>`;
