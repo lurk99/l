@@ -291,7 +291,8 @@
           <td>${r.unit}</td><td>${r.jalan}</td><td>${r.nama}</td><td>${r.telefon}</td>
           <td>${r.status === "Ahli" ? "<i class='fa fa-check-circle' style='color:green'></i> Ahli" : "<i class='fa fa-times-circle' style='color:red'></i> Bukan Ahli"}</td>
           <td><a href="${r.pautan}" target="_blank"><i class="fa fa-link"></i></a></td>
-          <td><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(r.coords)}&output=embed" width="100" height="60" style="border:0;"></iframe></td>
+                    <td><a href="${r.coords}" target="_blank"><i class="fa fa-link"></i></a></td>
+
           <td>${r.email}</td>
         </tr>
       `).join('');
