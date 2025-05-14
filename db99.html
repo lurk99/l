@@ -5,9 +5,10 @@
   <title>Lurk Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       background: #f0f2f5;
     }
@@ -63,9 +64,8 @@
     </div>
   </div>
 
-  <div id="dashboardPage" class="hidden">
-    <h1 style="text-align:center; padding: 20px;">Dashboard Pemilik Rumah</h1>
-    <div id="content" style="padding: 20px;"></div>
+  <div id="dashboardWrapper" class="hidden">
+    <!-- Ini akan dimasukkan kandungan dashboard asal anda selepas login -->
   </div>
 
   <script>
@@ -80,40 +80,21 @@
 
       if (isValid) {
         document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("dashboardPage").classList.remove("hidden");
-        initDashboard();
+        document.getElementById("dashboardWrapper").classList.remove("hidden");
+        loadDashboard();
       } else {
         alert("Nama pengguna atau katalaluan salah.");
       }
     }
 
-    function initDashboard() {
-      const content = document.getElementById("content");
-      const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec";
-      fetch(apiURL)
-        .then(res => res.json())
-        .then(data => {
-          let html = '<table border="1" cellpadding="8" cellspacing="0" style="width:100%; background:white; border-collapse: collapse;">';
-          html += '<thead><tr><th>UNIT</th><th>JALAN</th><th>NAMA</th><th>TELEFON</th><th>STATUS AHLI</th><th>PAUTAN</th><th>COORDS</th><th>EMAIL</th></tr></thead><tbody>';
-
-          data.forEach(row => {
-            html += '<tr>' +
-              `<td>${row.UNIT || ''}</td>` +
-              `<td>${row.JALAN || ''}</td>` +
-              `<td>${row.NAMA || ''}</td>` +
-              `<td>${row.TELEFON || ''}</td>` +
-              `<td>${row["STATUS AHLI"] === "Aktif" ? '✓ Ahli' : '✗ Bukan Ahli'}</td>` +
-              `<td><a href="${row.PAUTAN}" target="_blank">Pautan</a></td>` +
-              `<td><a href="${row.COORDS}" target="_blank">📍</a></td>` +
-              `<td>${row.EMAIL || ''}</td>` +
-              '</tr>';
-          });
-
-          html += '</tbody></table>';
-          content.innerHTML = html;
+    function loadDashboard() {
+      fetch("dashboard.html")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("dashboardWrapper").innerHTML = html;
         })
         .catch(err => {
-          content.innerHTML = `<p style='color:red;'>Gagal ambil data: ${err}</p>`;
+          document.getElementById("dashboardWrapper").innerHTML = `<p style='color:red;'>Ralat memuatkan dashboard: ${err}</p>`;
         });
     }
   </script>
