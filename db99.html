@@ -4,67 +4,35 @@
   <meta charset="UTF-8">
   <title>Lurk Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      background: #f4f6f8;
+      background: #f0f2f5;
     }
 
-.banner-left img.logo-kiri {
-  display: flex;
-  align-items: center;
-}
+    .banner {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #002B5B;
+      color: white;
+      padding: 15px 30px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
 
-.banner img {
-  height: 40px;
-  width: 40px;
-  margin-right: 20px;
-  border-radius: 50%;
-  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-  border: 2px solid white;
-}
-
-.banner-title {
-  font-size: 8px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  text-align: center;
-  flex-grow: 1;
-}
-
-
-
-
-
-.banner-center h3 {
-  color: white;
-  font-size: 18px;
-  margin: 0;
-  text-align: center;
-  width: 100%;
-}
-
-
-
-
-
-
-
-
-
-    
-    
-
-.banner-right img.logo-kanan {
-  height: 40px;
-  transition: transform 0.3s ease;
-}
-
-.banner-right img.logo-kanan:hover {
-  transform: scale(1.1);
-  cursor: pointer;
-}
+    .banner nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 16px;
+    }
 
     .container {
       padding: 100px 30px 40px;
@@ -81,50 +49,63 @@
 
     .card {
       flex: 1 1 180px;
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: linear-gradient(to bottom right, #004AAD, #0076D1);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
     }
 
     .chart-container {
       background: white;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
       margin-bottom: 30px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     .filters {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 12px;
       margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
     }
 
     .filters select,
     .filters input {
-      padding: 6px 10px;
-      margin-right: 10px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       background: white;
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
 
     th, td {
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid #eee;
     }
 
     th {
-      background: #f0f0f0;
+      background: #f7f9fc;
       text-align: left;
     }
 
     tr:hover {
-      background-color: #f9f9f9;
+      background-color: #f1f1f1;
     }
 
     @media (max-width: 768px) {
@@ -135,58 +116,35 @@
   </style>
 </head>
 <body>
-<!-- Banner -->
-<div class="banner">
-  <!-- Logo kiri -->
-  <div class="banner-left">
-    <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" class="logo-kiri" />
-  </div>
-
-  <!-- Tajuk tengah -->
-  <div class="banner-center">
-    <h3>Maklumat Pemilik Rumah ARIYA</h3>
-  </div>
-
-  <!-- Logo kanan sebagai pautan 
-  <div class="banner-right">
-    <a href="https://lurk99.github.io/l/" target="_blank">
-      <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
-    </a>
-  </div>
-</div> -->
-
-
-<div class="banner-right">
-  <!-- <span style="font-size: smaller; color: rgba(255,255,255,0.6);">update:14|05|2025</span> -->
-    <span style="font-size: 9px; color: rgba(0,0,0,0.5);">update:14-05-2025</span>
-  <a href="https://lurk99.github.io/l/" target="_blank">
-    <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
-  </a>
-</div>
+  <div class="banner">
+    <div><i class="fa-solid fa-house"></i> Dashboard Pemilik Rumah SERENIA ARIYA</div>
+    <nav>
+      <a href="#pieChart">Pie</a>
+      <a href="#barChart">Bar</a>
+      <a href="#filters">Filter</a>
+      <a href="#table">Senarai</a>
+      <a href="#about">About</a>
+    </nav>
   </div>
 
   <div class="container">
     <div class="stats" id="stats"></div>
 
-    <div class="chart-container">
-      <canvas id="pieChart"></canvas>
+    <div class="chart-container" id="pieChartContainer">
+      <canvas id="pieChart" height="100"></canvas>
     </div>
 
-    <div class="chart-container">
+    <div class="chart-container" id="barChartContainer">
       <canvas id="barChart"></canvas>
     </div>
 
-    <div class="chart-container">
-      <canvas id="lineChart"></canvas>
-    </div>
-
-    <div class="filters">
+    <div class="filters" id="filters">
       <select id="filterJalan"><option value="">Semua Jalan</option></select>
       <select id="filterStatus"><option value="">Semua Status</option></select>
       <input type="text" id="searchNama" placeholder="Cari nama..." />
     </div>
 
-    <table>
+    <table id="table">
       <thead>
         <tr>
           <th>Unit</th><th>Jalan</th><th>Nama</th><th>Telefon</th>
@@ -195,10 +153,14 @@
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+
+    <div id="about" style="margin-top: 50px; text-align:center; color: #888; font-size: 14px;">
+      <p>Dibina oleh <strong>Lurk Inc.</strong> &copy; 2025</p>
+    </div>
   </div>
 
   <script>
-    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec"; // ← Ganti dengan Web App URL anda
+    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec"; // Ganti dengan Web App anda
 
     fetch(apiURL)
       .then(res => res.json())
@@ -219,51 +181,53 @@
 
         const statsDiv = document.getElementById("stats");
         const jalanSet = new Set();
-        const statusCount = {};
-        const daftarByMonth = {};
+        const statusCount = {"Ahli": 0, "Bukan Ahli": 0};
         const jalanCount = {};
         const ownerList = [];
 
         rows.forEach(row => {
+          const statusRaw = (row[idx.status] || "").toLowerCase();
+          const status = statusRaw.includes("aktif") ? "Ahli" : "Bukan Ahli";
+
           const record = {
             unit: row[idx.unit],
             jalan: row[idx.jalan],
             nama: row[idx.nama],
             telefon: row[idx.telefon],
-            status: row[idx.status],
+            status: status,
             pautan: row[idx.pautan],
             coords: row[idx.coords],
-            email: row[idx.email],
-            tarikh: row[idx.status] // anda boleh tukar ke kolum tarikh jika ada
+            email: row[idx.email]
           };
 
           ownerList.push(record);
           jalanSet.add(record.jalan);
-          statusCount[record.status] = (statusCount[record.status] || 0) + 1;
+          statusCount[status]++;
           jalanCount[record.jalan] = (jalanCount[record.jalan] || 0) + 1;
         });
 
-        // Statistik
         statsDiv.innerHTML = `
-          <div class="card">Jumlah Pemilik<br><b>${ownerList.length}</b></div>
-          <div class="card">Jumlah Jalan<br><b>${jalanSet.size}</b></div>
-          <div class="card">Ahli<br><b>${statusCount["Ahli"] || 0}</b></div>
-          <div class="card">Bukan Ahli<br><b>${statusCount["Bukan Ahli"] || 0}</b></div>
+          <div class="card"><i class="fa-solid fa-users"></i><br>Jumlah Pemilik<br><b>${ownerList.length}</b></div>
+          <div class="card"><i class="fa-solid fa-road"></i><br>Jumlah Jalan<br><b>${jalanSet.size}</b></div>
+          <div class="card"><i class="fa-solid fa-user-check"></i><br>Ahli<br><b>${statusCount["Ahli"]}</b></div>
+          <div class="card"><i class="fa-solid fa-user-xmark"></i><br>Bukan Ahli<br><b>${statusCount["Bukan Ahli"]}</b></div>
         `;
 
-        // Pie Chart
         new Chart(document.getElementById("pieChart"), {
           type: "pie",
           data: {
             labels: Object.keys(statusCount),
             datasets: [{
               data: Object.values(statusCount),
-              backgroundColor: ["#00796B", "#B0BEC5"]
+              backgroundColor: ["#2E8B57", "#B0BEC5"]
             }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
           }
         });
 
-        // Bar Chart - Jalan
         const jalanSorted = Object.entries(jalanCount).sort((a,b) => b[1] - a[1]);
         new Chart(document.getElementById("barChart"), {
           type: "bar",
@@ -272,26 +236,11 @@
             datasets: [{
               label: "Unit per Jalan",
               data: jalanSorted.map(x => x[1]),
-              backgroundColor: "#1976D2"
+              backgroundColor: "#2196F3"
             }]
           }
         });
 
-        // Dummy line chart - if no tarikh, skip
-        new Chart(document.getElementById("lineChart"), {
-          type: "line",
-          data: {
-            labels: [],
-            datasets: [{
-              label: "Trend Pendaftaran",
-              data: [],
-              borderColor: "blue",
-              fill: false
-            }]
-          }
-        });
-
-        // Populate dropdowns
         const jalanSelect = document.getElementById("filterJalan");
         const statusSelect = document.getElementById("filterStatus");
         jalanSet.forEach(j => {
@@ -299,13 +248,13 @@
           opt.value = opt.textContent = j;
           jalanSelect.appendChild(opt);
         });
-        Object.keys(statusCount).forEach(s => {
+
+        ["Ahli", "Bukan Ahli"].forEach(s => {
           const opt = document.createElement("option");
           opt.value = opt.textContent = s;
           statusSelect.appendChild(opt);
         });
 
-        // Render Table
         function renderTable() {
           const filterJalan = jalanSelect.value;
           const filterStatus = statusSelect.value;
@@ -327,7 +276,6 @@
           `).join('');
         }
 
-        // Event listeners
         jalanSelect.onchange = renderTable;
         statusSelect.onchange = renderTable;
         document.getElementById("searchNama").oninput = renderTable;
