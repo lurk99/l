@@ -11,18 +11,60 @@
       background: #f4f6f8;
     }
 
-    .banner {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: #0a4275;
-      color: white;
-      padding: 15px 30px;
-      font-size: 20px;
-      font-weight: bold;
-      z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
+.banner-left img.logo-kiri {
+  display: flex;
+  align-items: center;
+}
+
+.banner img {
+  height: 40px;
+  width: 40px;
+  margin-right: 20px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  border: 2px solid white;
+}
+
+.banner-title {
+  font-size: 8px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  text-align: center;
+  flex-grow: 1;
+}
+
+
+
+
+
+.banner-center h3 {
+  color: white;
+  font-size: 18px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+
+    
+    
+
+.banner-right img.logo-kanan {
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.banner-right img.logo-kanan:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
 
     .container {
       padding: 100px 30px 40px;
@@ -93,7 +135,35 @@
   </style>
 </head>
 <body>
-  <div class="banner">DASHBOARD PEMILIK SERENIA ARIYA</div>
+<!-- Banner -->
+<div class="banner">
+  <!-- Logo kiri -->
+  <div class="banner-left">
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/ariyalogo-lnktre.PNG" alt="Logo ARIYA" class="logo-kiri" />
+  </div>
+
+  <!-- Tajuk tengah -->
+  <div class="banner-center">
+    <h3>Maklumat Pemilik Rumah ARIYA</h3>
+  </div>
+
+  <!-- Logo kanan sebagai pautan 
+  <div class="banner-right">
+    <a href="https://lurk99.github.io/l/" target="_blank">
+      <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
+    </a>
+  </div>
+</div> -->
+
+
+<div class="banner-right">
+  <!-- <span style="font-size: smaller; color: rgba(255,255,255,0.6);">update:14|05|2025</span> -->
+    <span style="font-size: 9px; color: rgba(0,0,0,0.5);">update:14-05-2025</span>
+  <a href="https://lurk99.github.io/l/" target="_blank">
+    <img src="https://raw.githubusercontent.com/lurk99/img/main/lurk-inc.PNG" alt="Lurk Logo" class="logo-kanan" />
+  </a>
+</div>
+  </div>
 
   <div class="container">
     <div class="stats" id="stats"></div>
