@@ -186,8 +186,12 @@
         const ownerList = [];
 
         rows.forEach(row => {
-          const statusRaw = (row[idx.status] || "").toLowerCase();
-            const status = statusRaw === "Aktif" ? "Ahli" : "Bukan Ahli";
+
+const statusRaw = (row[idx.status] || "").trim().toLowerCase();
+const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
+
+
+          
 
           const record = {
             unit: row[idx.unit],
@@ -270,8 +274,12 @@
           tbody.innerHTML = filtered.map(r => `
             <tr>
               <td>${r.unit}</td><td>${r.jalan}</td><td>${r.nama}</td><td>${r.telefon}</td>
-              <td>${r.status}</td><td><a href="${r.pautan}" target="_blank">Link</a></td>
-              <td>${r.coords}</td><td>${r.email}</td>
+              <td>${r.status}</td><td><a href="${r.pautan}" target="_blank"><i class="fa fa-link"></i></a>
+</td>
+
+
+              <td><a href="https://www.google.com/maps?q=${r.coords}" target="_blank">${r.coords}</a>
+</td><td>${r.email}</td>
             </tr>
           `).join('');
         }
