@@ -102,6 +102,7 @@
     th {
       background: #f7f9fc;
       text-align: left;
+      cursor: pointer;
     }
 
     tr:hover {
@@ -131,7 +132,7 @@
     <div class="stats" id="stats"></div>
 
     <div class="chart-container" id="pieChartContainer">
-      <canvas id="pieChart" height="50"></canvas>
+      <canvas id="pieChart" height="100"></canvas>
     </div>
 
     <div class="chart-container" id="barChartContainer">
@@ -147,8 +148,14 @@
     <table id="table">
       <thead>
         <tr>
-          <th>Unit</th><th>Jalan</th><th>Nama</th><th>Telefon</th>
-          <th>Status Ahli</th><th>Pautan</th><th>Coords</th><th>Email</th>
+          <th onclick="sortTable(0)">Unit</th>
+          <th onclick="sortTable(1)">Jalan</th>
+          <th onclick="sortTable(2)">Nama</th>
+          <th onclick="sortTable(3)">Telefon</th>
+          <th onclick="sortTable(4)">Status Ahli</th>
+          <th>Pautan</th>
+          <th>Lokasi</th>
+          <th>Email</th>
         </tr>
       </thead>
       <tbody id="tableBody"></tbody>
@@ -160,7 +167,8 @@
   </div>
 
   <script>
-    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec"; // Ganti dengan Web App anda
+    const apiURL = "https://script.google.com/macros/s/AKfycbz4UpZWzRuJacLW0iUYCO5rVIf8kCjkjhH60Jg4-L0URQMlr0CTbbWYUmY4HoLduLhq/exec";
+    let tableData = [];
 
     fetch(apiURL)
       .then(res => res.json())
@@ -186,12 +194,8 @@
         const ownerList = [];
 
         rows.forEach(row => {
-
-const statusRaw = (row[idx.status] || "").trim().toLowerCase();
-const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
-
-
-          
+          const statusRaw = (row[idx.status] || "").trim().toLowerCase();
+          const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
 
           const record = {
             unit: row[idx.unit],
@@ -210,12 +214,19 @@ const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
           jalanCount[record.jalan] = (jalanCount[record.jalan] || 0) + 1;
         });
 
-        statsDiv.innerHTML = `
+        tableData = ownerList;
+
+        document.getElementById("filterJalan").innerHTML += [...jalanSet].sort().map(j => `<option value="${j}">${j}</option>`).join('');
+        ["Ahli", "Bukan Ahli"].forEach(s => {
+          document.getElementById("filterStatus").innerHTML += `<option value="${s}">${s}</option>`;
+        });
+
+        const statsHTML = `
           <div class="card"><i class="fa-solid fa-users"></i><br>Jumlah Pemilik<br><b>${ownerList.length}</b></div>
           <div class="card"><i class="fa-solid fa-road"></i><br>Jumlah Jalan<br><b>${jalanSet.size}</b></div>
           <div class="card"><i class="fa-solid fa-user-check"></i><br>Ahli<br><b>${statusCount["Ahli"]}</b></div>
-          <div class="card"><i class="fa-solid fa-user-xmark"></i><br>Bukan Ahli<br><b>${statusCount["Bukan Ahli"]}</b></div>
-        `;
+          <div class="card"><i class="fa-solid fa-user-xmark"></i><br>Bukan Ahli<br><b>${statusCount["Bukan Ahli"]}</b></div>`;
+        statsDiv.innerHTML = statsHTML;
 
         new Chart(document.getElementById("pieChart"), {
           type: "pie",
@@ -232,64 +243,81 @@ const status = statusRaw === "aktif" ? "Ahli" : "Bukan Ahli";
           }
         });
 
-        const jalanSorted = Object.entries(jalanCount).sort((a,b) => b[1] - a[1]);
         new Chart(document.getElementById("barChart"), {
           type: "bar",
           data: {
-            labels: jalanSorted.map(x => x[0]),
+            labels: Object.keys(jalanCount),
             datasets: [{
               label: "Unit per Jalan",
-              data: jalanSorted.map(x => x[1]),
+              data: Object.values(jalanCount),
               backgroundColor: "#2196F3"
             }]
           }
         });
 
-        const jalanSelect = document.getElementById("filterJalan");
-        const statusSelect = document.getElementById("filterStatus");
-        jalanSet.forEach(j => {
-          const opt = document.createElement("option");
-          opt.value = opt.textContent = j;
-          jalanSelect.appendChild(opt);
+        ["filterJalan", "filterStatus", "searchNama"].forEach(id => {
+          document.getElementById(id).addEventListener("change", renderTable);
+          document.getElementById(id).addEventListener("input", renderTable);
         });
-
-        ["Ahli", "Bukan Ahli"].forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = opt.textContent = s;
-          statusSelect.appendChild(opt);
-        });
-
-        function renderTable() {
-          const filterJalan = jalanSelect.value;
-          const filterStatus = statusSelect.value;
-          const searchNama = document.getElementById("searchNama").value.toLowerCase();
-          const tbody = document.getElementById("tableBody");
-
-          const filtered = ownerList.filter(r =>
-            (!filterJalan || r.jalan === filterJalan) &&
-            (!filterStatus || r.status === filterStatus) &&
-            (!searchNama || r.nama.toLowerCase().includes(searchNama))
-          );
-
-          tbody.innerHTML = filtered.map(r => `
-            <tr>
-              <td>${r.unit}</td><td>${r.jalan}</td><td>${r.nama}</td><td>${r.telefon}</td>
-              <td>${r.status}</td><td><a href="${r.pautan}" target="_blank"><i class="fa fa-link"></i></a>
-</td>
-
-
-              <td><a href="https://www.google.com/maps?q=${r.coords}" target="_blank">${r.coords}</a>
-</td><td>${r.email}</td>
-            </tr>
-          `).join('');
-        }
-
-        jalanSelect.onchange = renderTable;
-        statusSelect.onchange = renderTable;
-        document.getElementById("searchNama").oninput = renderTable;
 
         renderTable();
       });
+
+    function renderTable() {
+      const jalan = document.getElementById("filterJalan").value;
+      const status = document.getElementById("filterStatus").value;
+      const search = document.getElementById("searchNama").value.toLowerCase();
+      const tbody = document.getElementById("tableBody");
+
+      const filtered = tableData.filter(r =>
+        (!jalan || r.jalan === jalan) &&
+        (!status || r.status === status) &&
+        (!search || r.nama.toLowerCase().includes(search))
+      );
+
+      localStorage.setItem("filterJalan", jalan);
+      localStorage.setItem("filterStatus", status);
+      localStorage.setItem("searchNama", search);
+
+      tbody.innerHTML = filtered.map(r => `
+        <tr>
+          <td>${r.unit}</td><td>${r.jalan}</td><td>${r.nama}</td><td>${r.telefon}</td>
+          <td>${r.status === "Ahli" ? "<i class='fa fa-check-circle' style='color:green'></i> Ahli" : "<i class='fa fa-times-circle' style='color:red'></i> Bukan Ahli"}</td>
+          <td><a href="${r.pautan}" target="_blank"><i class="fa fa-link"></i></a></td>
+          <td><iframe src="https://maps.google.com/maps?q=${encodeURIComponent(r.coords)}&output=embed" width="100" height="60" style="border:0;"></iframe></td>
+          <td>${r.email}</td>
+        </tr>
+      `).join('');
+    }
+
+    function sortTable(n) {
+      const table = document.getElementById("table");
+      let switching = true, dir = "asc", switchcount = 0;
+      while (switching) {
+        switching = false;
+        const rows = table.rows;
+        for (let i = 1; i < rows.length - 1; i++) {
+          let shouldSwitch = false;
+          const x = rows[i].getElementsByTagName("TD")[n];
+          const y = rows[i + 1].getElementsByTagName("TD")[n];
+          if ((dir === "asc" && x.innerText.toLowerCase() > y.innerText.toLowerCase()) ||
+              (dir === "desc" && x.innerText.toLowerCase() < y.innerText.toLowerCase())) {
+            shouldSwitch = true;
+            break;
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        } else {
+          if (switchcount === 0 && dir === "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
   </script>
 </body>
 </html>
